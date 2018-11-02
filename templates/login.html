@@ -1,0 +1,49 @@
+{% include 'includes/_layout.html' %}
+	<!-- BREADCRUMB -->
+	<div id="breadcrumb">
+		<div class="container">
+			<ul class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">Login</li>
+			</ul>
+		</div>
+	</div>
+	<!-- /BREADCRUMB -->
+
+	<!-- section -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+                <form class="form-signin">
+                  <div class="text-center mb-4">
+                    <h1 class="h3 mb-3 font-weight-normal">AfrykMART Login</h1>
+                  </div>
+
+                    <label for="inputEmail">Email address</label>
+                  <div class="form-label-group">
+                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                  </div>
+
+                    <label for="inputPassword">Password</label>
+                  <div class="form-label-group">
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    
+                  </div>
+
+                  <div class="checkbox mb-3">
+                    <label>
+                      <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+                  </div>
+                  <button class="btn btn-lg primary-btn btn-block" type="submit">Sign in</button>
+                </form>
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->
+
+{% include 'includes/_footer.html' %}
