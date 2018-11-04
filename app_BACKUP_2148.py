@@ -54,7 +54,7 @@ def checkout():
 
 
 #This is for rendering the login.html template
-@app.route('/login', methods=["POST", "GET"])
+@app.route('/login', methods = ["POST","GET"])
 def login():
     session['index'] = False
     if request.method == 'POST':
@@ -79,7 +79,7 @@ def login():
                 session['logged_in'] = True
                 session['name'] = name
                 session['role'] = role
-                flash("Logged in as " + name + ".", 'success')
+                flash("Logged in as "+name+".",'success')
                 if role == "Admin":
                     print("Admin")
                     #return redirect(url_for('update'))
@@ -92,12 +92,12 @@ def login():
             cur.close()
         else:
             error = "Email not found. Please create a new account if you haven't"
-            return render_template('login.html', error=error)
+            return render_template('login.html', error=error)        
     return render_template("login.html")
 
 
 #This is for rendering the signup.html template
-@app.route('/signup', methods=["POST", "GET"])
+@app.route('/signup', methods = ["POST","GET"])
 def signup():
     session['index'] = False
     if request.method == "POST":
@@ -106,19 +106,19 @@ def signup():
         dob = request.form['dob']
         email = request.form['email']
         password = request.form['password']
-
+        
         try:
             # prepare update query and data
-            query = 'INSERT INTO users (full_name, gender, date_of_birth, email, password) VALUES(%s,%s,%s,%s,%s)'
+            query = 'INSERT INTO users (full_name, gender, date_of_birth, email, password) VALUES(%s,%s,%s,%s,%s)'        
             #use cursor
-            cur = mysql.connection.cursor()
+            cur =  mysql.connection.cursor()
             #execute query
-            cur.execute(query, (name, gender, dob, email, password))
+            cur.execute(query,(name,gender,dob,email,password))
             #commit DB
             mysql.connection.commit()
             #close connect
             cur.close()
-            flash(name + ', your account is successfully created!', 'success')
+            flash(name+', your account is successfully created!', 'success')
             session['name'] = name
             session['logged_in'] = True
             return redirect(url_for('checkout'))
@@ -141,6 +141,8 @@ def faq():
     return render_template("faq.html")
 
 
+<<<<<<< HEAD
+=======
 #check if logged_in, not be able to go to a link by changing url in bar
 def is_logged_in(f):
     @wraps(f)
@@ -150,8 +152,8 @@ def is_logged_in(f):
         else:
             flash('Unauthourized access, please log in', 'danger')
             return redirect('login')
-
     return wrap
+
 
 
 #user logout
@@ -162,15 +164,16 @@ def logout():
     flash('You are logged out', 'success')
     return redirect(url_for('index'))
 
-
+>>>>>>> master
 #This is for rendering the shipping.html template
 @app.route('/shipping')
-@is_logged_in  #Verify that the user is logged before accessing this page
+@is_logged_in #Verify that the user is logged before accessing this page
 def shipping():
     session['index'] = False
     return render_template("shipping.html")
 
 
+<<<<<<< HEAD
 @app.route("/addProduct", methods=["GET", "POST"])
 def addProduct():
     if request.method == "POST":
@@ -225,8 +228,13 @@ def addToCart():
             msg = "Error occured"
             conn.close()
     render_template("index.html")
+=======
+>>>>>>> master
 
 
 if __name__ == '__main__':
     app.secret_key = "114455"
     app.run(debug=True)
+
+    # https://github.com/BrOrlandi/SFECommerce/commit/441649f3fc4b2fde9816d1a6de28d671ea287f52
+    # https://github.com/mohsinenur/menshut

@@ -49,8 +49,6 @@
 				<div class="pull-right">
 					<ul class="header-top-links">
 						<li><a href="/">Store</a></li>
-						<li><a href="#">Newsletter</a></li>
-						<li><a href="#">FAQ</a></li>
 						<li class="dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i class="fa fa-caret-down"></i></a>
 							<ul class="custom-menu">
@@ -67,6 +65,11 @@
 								<li><a href="#">EUR (€)</a></li>
 							</ul>
 						</li>
+                         {% if session.logged_in != NULL %}
+                        <li><strong class="text-uppercase"><a href="/"> Welcome {{session.name}}!</a></strong></li>
+                        {% else %}
+                        <li><a href="/login" class="">Login</a> /<a href="/signup" class="">Sign Up</a></li>
+                        {% endif %}
 					</ul>
 				</div>
 			</div>
@@ -109,12 +112,22 @@
 								</div>
 								<strong class="text-uppercase">My Account <i class="fa fa-caret-down"></i></strong>
 							</div>
+                            {% if session.logged_in == NULL %}
 							<a href="/login" class="text-uppercase">Login</a> /<a href="/signup" class="text-uppercase">Sign Up</a>
+                            {% else %}
+                                <a>{{session.name}}</a>
+                             {% endif %}
 							<ul class="custom-menu">
 								<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
 								<li><a href="/checkout"><i class="fa fa-check"></i> Checkout</a></li>
-								<li><a href="/login"><i class="fa fa-unlock-alt"></i> Login</a></li>
-								<li><a href="/signup"><i class="fa fa-user-plus"></i> Create An Account</a></li>
+                                {% if session.logged_in != NULL %}
+                                <li><a href="/logout"><i class="fa fa-unlock-alt"></i> Logout</a></li>
+                                {% else %}
+                                <li><a href="/login"><i class="fa fa-unlock-alt"></i> Login</a></li>
+                                <li><a href="/signup"><i class="fa fa-user-plus"></i> Create An Account</a></li>
+                                {% endif %}
+								
+                                
 							</ul>
 						</li>
 						<!-- /Account -->
