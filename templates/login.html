@@ -10,25 +10,27 @@
 	</div>
 	<!-- /BREADCRUMB -->
 
+    {% include 'includes/_messages.html' %}
+
 	<!-- section -->
 	<div class="section">
 		<!-- container -->
 		<div class="container">
 			<!-- row -->
 			<div class="row">
-                <form class="form-signin">
+                <form class="form-signin" method="post">
                   <div class="text-center mb-4">
                     <h1 class="h3 mb-3 font-weight-normal">AfrykMART Login</h1>
                   </div>
 
                     <label for="inputEmail">Email address</label>
                   <div class="form-label-group">
-                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                    <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
                   </div>
 
                     <label for="inputPassword">Password</label>
                   <div class="form-label-group">
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
                     
                   </div>
 

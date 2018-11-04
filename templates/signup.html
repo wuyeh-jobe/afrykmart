@@ -9,6 +9,8 @@
 		</div>
 	</div>
 	<!-- /BREADCRUMB -->
+    
+     {% include 'includes/_messages.html' %}
 
 	<!-- section -->
 	<div class="section">
@@ -23,7 +25,7 @@
                   </div>
                   <div class="card-body">
                     <h5 class="card-title text-center">Sign Up</h5>
-                    <form class="form-signin">
+                    <form class="form-signin" method="post">
                         <label for="Full name">Full name</label>
                       <div class="form-label-group">
                         <input type="text" name="fullname" class="form-control" placeholder="fullname" required autofocus>
