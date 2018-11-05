@@ -179,52 +179,59 @@ def addProduct():
         product_title = request.form['title']
         product_price = request.form['price']
         product_desc = request.form['description']
+        image = request.form['image']
         product_keywords = request.form['keyword']
 
         #Uploading image procedure
-        image = request.files['image']
-        if image and allowed_file(image.filename):
-            filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            imagename = filename
-            try:
-                conn = mysql.connect()
-                cursor = conn.cursor()
-                cursor.execute(
-                    '''INSERT INTO products (product_cat, product_brand,product_title, product_price,
-                    product_desc, image, product_keywords) VALUES (?, ?, ?, ?, ?, ?,?)''',
-                    (product_cat, product_brand, product_title, product_price,
-                     product_desc, image, product_keywords))
-                conn.commit()
-                msg = "added successfully"
-            except:
-                msg = "error occured"
-                conn.rollback()
-        conn.close()
-        print(msg)
+        # image = request.files['image']
+        # if image and allowed_file(image.filename):
+        #     filename = secure_filename(image.filename)
+        #     image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #     imagename = filename
+        try:
+            # prepare update query and data
+            query = 'INSERT INTO products (product_cat, product_brand,product_title, product_price,product_desc, image, product_keywords) VALUES (%s,%s,%s,%s,%s,%s,%s)'
+            #use cursor
+            cur = mysql.connection.cursor()
+            #execute query
+            cur.execute(query,
+                        (product_cat, product_brand, product_title,
+                         product_price, product_desc, image, product_keywords))
+            #commit DB
+            mysql.connection.commit()
+            msg = "added successfully"
+            #close connect
+            cur.close()
+        except:
+            msg = "error occured"
+            cur.close()
+            print(msg)
         render_template("index.html")
 
 
-@app.route("/addToCart")
+@app.route("/addToCart", methods=["POST", "GET"])
 def addToCart():
     if request.method == "POST":
         p_id = int(request.args.get('product_id'))
         ip_add = request.remote_addr
         qty = 1
+        print(ip_add)
         try:
-
-            conn = mysql.connect()
-            cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO cart (p_id, ip_add, qty) VALUES (?, ?, ?)",
-                (p_id, ip_add, qty))
-            conn.commit()
-            msg = "Added successfully"
+            # prepare update query and data
+            query = 'INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)'
+            #use cursor
+            cur = mysql.connection.cursor()
+            #execute query
+            cur.execute(query, (p_id, ip_add, qty))
+            #commit DB
+            mysql.connection.commit()
+            msg = "added successfully"
+            #close connect
+            cur.close()
         except:
-            conn.rollback()
-            msg = "Error occured"
-            conn.close()
-    render_template("index.html")
+            msg = "error occured"
+            print(msg)
+    return render_template("products.html")
 
 
 if __name__ == '__main__':
