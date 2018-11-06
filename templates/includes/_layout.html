@@ -34,6 +34,24 @@
 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
+    <script>
+        function validate(){
+            if(document.getElementById('fullname').value == "" ||  document.getElementById('dob').value == "" || 
+             document.getElementById('gender').value == "Select Gender" ||
+               document.getElementById('email').value == "" ||
+               document.getElementById('password').value == "" ||
+              document.getElementById('confirmPassword').value == ""){
+                alert("None of the fields should be empty");
+                return false;
+            }
+            
+            if(document.getElementById('password').value != document.getElementById('confirmPassword').value){
+                alert("Passwords do not match!");
+                return false;
+            }
+            
+        }
+    </script>
 
 </head>
 

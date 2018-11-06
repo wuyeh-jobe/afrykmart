@@ -82,6 +82,7 @@ def login():
                 flash("Logged in as " + name + ".", 'success')
                 if role == "Admin":
                     print("Admin")
+                    #return redirect(url_for('update'))
                 else:
                     return redirect(url_for('checkout'))
             else:
@@ -106,7 +107,6 @@ def signup():
         email = request.form['email']
         password = request.form['password']
 
-
         try:
             # prepare update query and data
             query = 'INSERT INTO users (full_name, gender, date_of_birth, email, password) VALUES(%s,%s,%s,%s,%s)'
@@ -124,31 +124,6 @@ def signup():
             return redirect(url_for('checkout'))
         except:
             print("Error in adding to database")
-
-        cpassword = request.form['confirmPassword'];
-        
-        if(cpassword == password):        
-            try:
-                # prepare update query and data
-                query = 'INSERT INTO users (full_name, gender, date_of_birth, email, password) VALUES(%s,%s,%s,%s,%s)'        
-                #use cursor
-                cur =  mysql.connection.cursor()
-                #execute query
-                cur.execute(query,(name,gender,dob,email,password))
-                #commit DB
-                mysql.connection.commit()
-                #close connect
-                cur.close()
-                flash(name+', your account is successfully created!', 'success')
-                session['name'] = name
-                session['logged_in'] = True
-                return redirect(url_for('checkout'))
-            except:
-                print("Error in adding to database")
-        else:
-            flash('Passwords do not match', 'danger')
-            
-
     return render_template("signup.html")
 
 
@@ -194,31 +169,6 @@ def logout():
 def shipping():
     session['index'] = False
     return render_template("shipping.html")
-
-#This is for rendering the template for admin
-@app.route('/admin')
-def index_admin():
-    session['index'] = False
-    return render_template("index_admin.html")
-
-#This is for rendering the orders.html template
-@app.route('/orders')
-def orders():
-    session['index'] = False
-    return render_template("orders.html")
-
-#This is for rendering the product_mgt.html template
-@app.route('/product_mgt')
-def product_mgt():
-    session['index'] = False
-    return render_template("product_mgt.html")
-
-#This is for rendering the users_details.html template
-@app.route('/users_details')
-def users_details():
-    session['index'] = False
-    return render_template("users_details.html")
-
 
 
 @app.route("/addProduct", methods=["GET", "POST"])

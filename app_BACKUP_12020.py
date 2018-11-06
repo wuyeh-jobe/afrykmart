@@ -105,7 +105,7 @@ def signup():
         dob = request.form['dob']
         email = request.form['email']
         password = request.form['password']
-
+<<<<<<< HEAD
 
         try:
             # prepare update query and data
@@ -124,7 +124,7 @@ def signup():
             return redirect(url_for('checkout'))
         except:
             print("Error in adding to database")
-
+=======
         cpassword = request.form['confirmPassword'];
         
         if(cpassword == password):        
@@ -148,7 +148,7 @@ def signup():
         else:
             flash('Passwords do not match', 'danger')
             
-
+>>>>>>> master
     return render_template("signup.html")
 
 
