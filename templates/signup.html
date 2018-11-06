@@ -1,0 +1,78 @@
+{% include 'includes/_layout.html' %}
+	<!-- BREADCRUMB -->
+	<div id="breadcrumb">
+		<div class="container">
+			<ul class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">Sign Up</li>
+			</ul>
+		</div>
+	</div>
+	<!-- /BREADCRUMB -->
+    
+     {% include 'includes/_messages.html' %}
+
+	<!-- section -->
+	<div class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+              <div class="col-lg-10 col-xl-9 mx-auto">
+                <div class="card card-signin flex-row my-5">
+                  <div class="card-img-left d-none d-md-flex">
+                     <!-- Background image for card set in CSS! -->
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title text-center">Sign Up</h5>
+                    <form class="form-signin" method="post">
+                        <label for="Full name">Full name</label>
+                      <div class="form-label-group">
+                        <input type="text" name="fullname" id="fullname" class="form-control" placeholder="fullname" required autofocus>
+                      </div>
+                        
+                        <label for="exampleFormControlSelect1">Gender</label>
+                        <select class="form-control" name="gender" id="gender">
+                        <option>Select Gender</option>
+                          <option>Male</option>
+                          <option>Female</option>
+                        </select>
+                        
+                         <label for="date_of_birth">Date of Birth</label>
+                      <div class="form-label-group">
+                        <input type="date" name="dob" class="form-control" id="dob" placeholder="Date Of Birth" required autofocus>
+                      </div>
+
+                        <label for="inputEmail">Email address</label>
+                      <div class="form-label-group">
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required>
+                      </div>
+
+                        <label for="password">Password</label>
+                      <div class="form-label-group">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>                        
+                      </div>
+
+                        <label for="confirmPassword">Confirm password</label>
+                      <div class="form-label-group">
+                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Password" required>                        
+                      </div>
+                        
+                        
+
+                      <button class="btn btn-lg primary-btn btn-block text-uppercase" onclick="validate()" type="submit">Create Account</button>
+                        <hr class="my-4">
+                        <p class="text-center">Already have an account? <a style="color:#ff5f5f" href="/login">Click to Log In</a></p>
+                        <p class="text-center">Forgotten password? <a style="color:#ff5f5f" href="/login">Change password</a></p>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /section -->
+
+{% include 'includes/_footer.html' %}
