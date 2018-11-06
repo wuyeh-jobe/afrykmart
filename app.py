@@ -5,6 +5,7 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators 
 from passlib.hash import sha256_crypt #before this works, pip install passlib
 from functools import wraps
 import datetime
+import json
 
 
 app = Flask(__name__)
@@ -22,7 +23,18 @@ mysql = MySQL(app)
 @app.route('/')
 def index():
     session['index'] = True
-    return render_template("index.html")
+    #This gets the featured products and pass them to the index page
+    featuredProducts1 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    #This gets the featured products and pass them to the index page
+    featuredProducts2 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    #This gets the latest products and pass them to the index page
+    latestProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    #This gets the picked products and pass them to the index page
+    pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    
+    
+    allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id")
+    return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts)
 
 #This is for rendering the product-page.html template
 @app.route('/product')
@@ -80,7 +92,7 @@ def login():
             cur.close()
         else:
             error = "Email not found. Please create a new account if you haven't"
-            return render_template('login.html', error=error)        
+            return render_template('login.html', error=error)   
     return render_template("login.html")
 
 #This is for rendering the signup.html template
@@ -184,8 +196,114 @@ def users_details():
     session['index'] = False
     return render_template("users_details.html")
 
+#This is for rendering the admin_login.html template
+@app.route('/admin_login')
+def admin_login():
+    session['index'] = False
+    return render_template("admin_login.html")
 
 
+
+#This function for search the products available.
+@app.route("/search")
+def search():
+    searchText = request.args['searchText'] # get the text to search for
+    text = "%" + request.args['searchText'] + "%" 
+	# create an array with the query
+     #create cursor
+    cur = mysql.connection.cursor()
+        #get user by username
+    qresult = cur.execute("SELECT * FROM products WHERE product_title LIKE  %s", [text])
+	# Get the data returned by the query
+    all_data = cur.fetchall()
+    
+    
+    result =  [c['product_title'] for c in all_data if searchText.lower() in c['product_title'].lower()]
+    #print(result)
+    cur.close()
+	# return as JSON
+    return json.dumps({"results":result}) 
+
+#This function is to add tp cart.
+@app.route("/addToCart")
+def addToCart():
+    product_id = request.args['product_id'] # get product id
+    action = request.args['action'] # get action
+    print(type(action))
+     #create cursor
+    ip_add = request.remote_addr
+    print(ip_add)
+    cur = mysql.connection.cursor()
+    if product_id != -1:
+                #use cursor
+        cur2 =  mysql.connection.cursor()
+        result = cur.execute("SELECT * FROM cart")
+        if (result==0):
+            query = 'INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)' 
+                #execute query
+            cur2.execute(query,(product_id,ip_add,1))
+                #commit DB
+            mysql.connection.commit()
+            cur2.close()
+        for data in cur.fetchall():
+            cur3 =  mysql.connection.cursor()
+            qty = data["qty"]
+            query = ""
+            if data["p_id"] == int(product_id) and data["ip_add"]==ip_add:
+                #-50 is used to denote if a user wants to add to cart
+                if action=="-50":
+                    qty = qty+1
+                    query = "UPDATE cart SET qty = %s where p_id= %s"
+                    cur3.execute(query,(qty,data["p_id"]))
+                else:
+                    qty = qty-1
+                    query = "UPDATE cart SET qty = %s where p_id= %s"
+                    cur3.execute(query,(qty,data["p_id"]))
+
+            else:
+                query = "INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)"
+                cur3.execute(query,(product_id,ip_add,1))
+            mysql.connection.commit()
+            cur3.close()
+
+        cur.execute("DELETE FROM cart WHERE qty = -1")
+        mysql.connection.commit()
+
+
+    stmt = cur.execute("SELECT qty, product_price, product_title, p_id FROM cart , products where p_id=product_id")
+    result2 = cur.fetchall()
+    outp = [str(c['qty']) + str(c['product_price']) + c['product_title'] + str(c['p_id']) for c in result2]
+    #print(result2)
+    cur.close()
+	# return as JSON
+    return json.dumps({"results":result}) 
+
+def getProducts(query):
+    products = []
+    #create cursor
+    cur = mysql.connection.cursor()
+    result = cur.execute(query)
+    all_data = cur.fetchall()
+    for data in all_data:
+        product_id = str(data['product_id'])
+        product_cat = data['cat_name']
+        #product_brand = data['brand_name']
+        product_title = data['product_title']
+        product_price= str(data['product_price'])
+        product_desc = data['product_desc']
+        product_image= data['product_image']
+        product_desc = data['product_keywords']
+        #print(product_image)
+        products.append(product_id+"#"+product_cat+"#"+product_title+"#"+product_price+"#"+product_desc+"#"+product_image+"#"+product_desc)
+    return products
+        
+        
+        
+    
+    
+    
+    
+    
 
 
 if __name__ == '__main__':
