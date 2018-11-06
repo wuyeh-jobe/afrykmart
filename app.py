@@ -224,13 +224,55 @@ def users_details():
     return render_template("users_details.html")
 
 #This is for rendering the admin_login.html template
-@app.route('/admin_login')
+@app.route('/admin_login', methods=["POST", "GET"])
 def admin_login():
     session['index'] = False
+    if request.method == 'POST':
+        #get for fields
+        email = request.form['email']
+        password_given = request.form['password']
+
+        #create cursor
+        cur = mysql.connection.cursor()
+
+        #get user by username
+        result = cur.execute('Select * from users where email = %s', [email])
+        print(result)
+        if result > 0:
+            data = cur.fetchone()
+            password = data['password']
+            email = data['email']
+            role = data['role']
+            #compare passwords
+            if password_given == password:
+                #passed
+                session['logged_in'] = True
+                # session['name'] = name
+                session['role'] = role
+                # flash("Logged in as " + name + ".", 'success')
+                if role == "Admin":
+                    print("Admin")
+                    return redirect(url_for('index_admin'))
+
+                else:
+                    error = "Admin Login Only"
+                    flash("error")
+                    return redirect(url_for('admin_login', error=error))
+
+
+
+            else:
+                error = "Wrong password."
+                return render_template('admin_login.html', error=error)
+            #close connection
+            cur.close()
+        else:
+            error = "Email not found. Please check email input"
+            return render_template('admin_login.html', error=error) 
+    
+
+    
     return render_template("admin_login.html")
-
-
-
 #This function for search the products available.
 @app.route("/search")
 def search():
