@@ -106,7 +106,6 @@ def signup():
         email = request.form['email']
         password = request.form['password']
 
-
         try:
             # prepare update query and data
             query = 'INSERT INTO users (full_name, gender, date_of_birth, email, password) VALUES(%s,%s,%s,%s,%s)'
@@ -125,21 +124,22 @@ def signup():
         except:
             print("Error in adding to database")
 
-        cpassword = request.form['confirmPassword'];
-        
-        if(cpassword == password):        
+        cpassword = request.form['confirmPassword']
+
+        if (cpassword == password):
             try:
                 # prepare update query and data
-                query = 'INSERT INTO users (full_name, gender, date_of_birth, email, password) VALUES(%s,%s,%s,%s,%s)'        
+                query = 'INSERT INTO users (full_name, gender, date_of_birth, email, password) VALUES(%s,%s,%s,%s,%s)'
                 #use cursor
-                cur =  mysql.connection.cursor()
+                cur = mysql.connection.cursor()
                 #execute query
-                cur.execute(query,(name,gender,dob,email,password))
+                cur.execute(query, (name, gender, dob, email, password))
                 #commit DB
                 mysql.connection.commit()
                 #close connect
                 cur.close()
-                flash(name+', your account is successfully created!', 'success')
+                flash(name + ', your account is successfully created!',
+                      'success')
                 session['name'] = name
                 session['logged_in'] = True
                 return redirect(url_for('checkout'))
@@ -147,7 +147,6 @@ def signup():
                 print("Error in adding to database")
         else:
             flash('Passwords do not match', 'danger')
-            
 
     return render_template("signup.html")
 
@@ -195,11 +194,6 @@ def shipping():
     session['index'] = False
     return render_template("shipping.html")
 
-#This is for rendering the template for admin
-@app.route('/admin')
-def index_admin():
-    session['index'] = False
-    return render_template("index_admin.html")
 
 #This is for rendering the orders.html template
 @app.route('/orders')
@@ -207,11 +201,6 @@ def orders():
     session['index'] = False
     return render_template("orders.html")
 
-#This is for rendering the product_mgt.html template
-@app.route('/product_mgt')
-def product_mgt():
-    session['index'] = False
-    return render_template("product_mgt.html")
 
 #This is for rendering the users_details.html template
 @app.route('/users_details')
@@ -220,17 +209,26 @@ def users_details():
     return render_template("users_details.html")
 
 
+#This is for rendering the template for admin
+@app.route('/index_admin')
+def index_admin():
+    return render_template('index_admin.html')
 
-@app.route("/addProduct", methods=["GET", "POST"])
-def addProduct():
+#This is for rendering the product_mgt.html template
+@app.route("/product_mgt", methods=["GET", "POST"])
+def product_mgt():
     if request.method == "POST":
         product_cat = request.form['category']
         product_brand = request.form['brand']
         product_title = request.form['title']
         product_price = request.form['price']
         product_desc = request.form['description']
-        image = request.form['image']
-        product_keywords = request.form['keyword']
+        image = request.form['fileUpload']
+        product_keywords = request.form['keywords']
+        
+        print(product_title)
+        print(product_price)
+        print(product_keywords)
 
         #Uploading image procedure
         # image = request.files['image']
@@ -248,15 +246,16 @@ def addProduct():
                         (product_cat, product_brand, product_title,
                          product_price, product_desc, image, product_keywords))
             #commit DB
+
             mysql.connection.commit()
             msg = "added successfully"
             #close connect
             cur.close()
+            return redirect(url_for('index_admin'))
         except:
             msg = "error occured"
-            cur.close()
             print(msg)
-        render_template("index.html")
+    return render_template("product_mgt.html")
 
 
 @app.route("/addToCart", methods=["POST", "GET"])
