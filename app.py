@@ -201,6 +201,14 @@ def logout():
     flash('You are logged out', 'success')
     return redirect(url_for('index'))
 
+#admin logout
+@app.route('/admin_logout')
+@is_logged_in
+def admin_logout():
+    session.clear()
+    flash('You are logged out', 'success')
+    return redirect(url_for('admin_login'))
+
 
 #This is for rendering the shipping.html template
 @app.route('/shipping')
