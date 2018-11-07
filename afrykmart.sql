@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2018 at 03:31 PM
+-- Generation Time: Nov 07, 2018 at 02:28 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.8
 
@@ -57,6 +57,16 @@ CREATE TABLE `cart` (
   `qty` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`p_id`, `ip_add`, `qty`) VALUES
+(1, '127.0.0.1', 2),
+(2, '127.0.0.1', 3),
+(2, '127.0.0.1', 3),
+(2, '127.0.0.1', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -76,7 +86,12 @@ INSERT INTO `categories` (`cat_id`, `cat_name`) VALUES
 (1, 'Afryk Toiletry'),
 (2, 'Afryk Print Clothes'),
 (3, 'Afryk Footwear'),
-(4, 'Afryk Jewellery ');
+(4, 'Afryk Jewellery '),
+(5, 'Men'),
+(6, 'Women'),
+(7, 'West-African'),
+(8, 'Eastern-Africa'),
+(9, 'Sourvinirs-Africa');
 
 -- --------------------------------------------------------
 
@@ -111,6 +126,31 @@ CREATE TABLE `products` (
   `product_keywords` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`product_id`, `product_cat`, `product_brand`, `product_title`, `product_price`, `product_desc`, `product_image`, `product_keywords`) VALUES
+(1, 1, 1, 'Fancy African Blazer', 40, 'African made Blazer', 'blazer.jpg', 'blazer, women, african'),
+(2, 3, 4, 'Kente Suit', 458, 'The best in town!!', 'kentesuit.jpg', 'kente, men, Nothern Ghana'),
+(3, 3, 3, 'Maasai Shirt', 350, 'Maasai touch shirt', 'maasaishirt.jpg', 'maasai, men, shirt'),
+(4, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'maasaibag.jpeg', 'necklace,jewelclass'),
+(5, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'dress.jpg', 'necklace,jewelclass'),
+(6, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'shuka.jpg', 'necklace,jewelclass'),
+(7, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'heavyneck.jpg', 'necklace,jewelclass'),
+(8, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'necklace.jpg', 'necklace,jewelclass'),
+(9, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'fancyheels.jpg', 'necklace,jewelclass'),
+(10, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'slippers.jpg', 'necklace,jewelclass'),
+(11, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'jewelset.jpg', 'necklace,jewelclass'),
+(12, 2, 3, 'Fancy Women Tops', 400, 'fancy tops for your body', 'tops.jpg', 'tops, ladies, african,cloth'),
+(13, 2, 3, 'Lingerie', 250, 'a fancy lingerie for girls and wome', 'lingerie.jpg', 'lingerie, innerwear'),
+(14, 2, 3, 'Shea Butter', 200, 'perfect for natural hair', 'hairoil.jpg', 'African beauty'),
+(15, 2, 3, 'Body Oil', 240, 'Oil for skin, very good', 'bodyoil.jpg', 'body oil, african, skin,'),
+(16, 2, 3, 'Dashiki Dress', 260, 'a real african wears the pride of Africa Dashiki.', 'dashiki.jpg', 'dashiki, purely african, pride of africa'),
+(17, 2, 3, 'Fancy Body Wear', 500, 'a fancy necklace for your neck', 'banner03.jpg', 'necklace,jewelclass'),
+(18, 2, 3, 'Fancy Necklace', 100, 'a fancy necklace for your neck', 'banner02.jpg', 'necklace,jewelclass'),
+(19, 2, 3, 'Fancy Necklace', 1000, 'a fancy necklace for your neck', 'banner01.jpg', 'necklace,jewelclass');
+
 -- --------------------------------------------------------
 
 --
@@ -124,10 +164,20 @@ CREATE TABLE `users` (
   `date_of_birth` date NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('Admin','Standard') NOT NULL,
+  `role` enum('Admin','Standard') NOT NULL DEFAULT 'Standard',
   `status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `full_name`, `gender`, `date_of_birth`, `email`, `password`, `role`, `status`, `date_created`) VALUES
+(3, 'Wuyeh Jobe', 'Male', '2018-11-03', 'jwuyeh@gmail.com', '1122', 'Standard', 'Active', '2018-11-03 23:04:07'),
+(4, 'Faith Kilonzi', 'Female', '2018-10-28', 'lcaromin@asu.edu', '7877', 'Standard', 'Active', '2018-11-03 23:06:33'),
+(5, 'Rahmat', 'Female', '2018-11-05', 'rahmat@gmail.com', '1122', 'Standard', 'Active', '2018-11-05 15:51:11'),
+(6, 'Nanis Kanana', 'Female', '2018-11-05', 'jwuyeh@gmail.com', '1122', 'Standard', 'Active', '2018-11-05 19:20:50');
 
 --
 -- Indexes for dumped tables
@@ -179,7 +229,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -191,13 +241,13 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

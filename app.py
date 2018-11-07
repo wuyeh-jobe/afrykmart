@@ -34,13 +34,13 @@ mysql = MySQL(app)
 def index():
     session['index'] = True
     #This gets the featured products and pass them to the index page
-    featuredProducts1 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    featuredProducts1 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 5")
     #This gets the featured products and pass them to the index page
-    featuredProducts2 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    featuredProducts2 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
     #This gets the latest products and pass them to the index page
-    latestProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    latestProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
     #This gets the picked products and pass them to the index page
-    pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id limit 3")
+    pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
     
     
     allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id")
@@ -58,7 +58,9 @@ def product():
 @app.route('/products')
 def products():
     session['index'] = False
-    return render_template("products.html")
+    allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND()")
+    return render_template("products.html",ap = allProducts)
+
 
 
 #This is for rendering the checkout.html template
@@ -201,6 +203,14 @@ def logout():
     flash('You are logged out', 'success')
     return redirect(url_for('index'))
 
+#admin logout
+@app.route('/admin_logout')
+@is_logged_in
+def admin_logout():
+    session.clear()
+    flash('You are logged out', 'success')
+    return redirect(url_for('admin_login'))
+
 
 #This is for rendering the shipping.html template
 @app.route('/shipping')
@@ -224,13 +234,55 @@ def users_details():
     return render_template("users_details.html")
 
 #This is for rendering the admin_login.html template
-@app.route('/admin_login')
+@app.route('/admin_login', methods=["POST", "GET"])
 def admin_login():
     session['index'] = False
+    if request.method == 'POST':
+        #get for fields
+        email = request.form['email']
+        password_given = request.form['password']
+
+        #create cursor
+        cur = mysql.connection.cursor()
+
+        #get user by username
+        result = cur.execute('Select * from users where email = %s', [email])
+        print(result)
+        if result > 0:
+            data = cur.fetchone()
+            password = data['password']
+            email = data['email']
+            role = data['role']
+            #compare passwords
+            if password_given == password:
+                #passed
+                session['logged_in'] = True
+                # session['name'] = name
+                session['role'] = role
+                # flash("Logged in as " + name + ".", 'success')
+                if role == "Admin":
+                    print("Admin")
+                    return redirect(url_for('index_admin'))
+
+                else:
+                    error = "Admin Login Only"
+                    flash("error")
+                    return redirect(url_for('admin_login', error=error))
+
+
+
+            else:
+                error = "Wrong password."
+                return render_template('admin_login.html', error=error)
+            #close connection
+            cur.close()
+        else:
+            error = "Email not found. Please check email input"
+            return render_template('admin_login.html', error=error) 
+    
+
+    
     return render_template("admin_login.html")
-
-
-
 #This function for search the products available.
 @app.route("/search")
 def search():
