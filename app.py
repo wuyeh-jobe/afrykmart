@@ -257,15 +257,14 @@ def search():
 def addToCart():
     product_id = request.args['product_id'] # get product id
     action = request.args['action'] # get action
-    print(type(action))
      #create cursor
     ip_add = request.remote_addr
-    print(ip_add)
     cur = mysql.connection.cursor()
     if product_id != -1:
                 #use cursor
         cur2 =  mysql.connection.cursor()
         result = cur.execute("SELECT * FROM cart")
+        print(result==0)
         if (result==0):
             query = 'INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)' 
                 #execute query
@@ -273,12 +272,12 @@ def addToCart():
                 #commit DB
             mysql.connection.commit()
             cur2.close()
+        cur3 =  mysql.connection.cursor()
         for data in cur.fetchall():
-            cur3 =  mysql.connection.cursor()
             qty = data["qty"]
-            query = ""
             if data["p_id"] == int(product_id) and data["ip_add"]==ip_add:
                 #-50 is used to denote if a user wants to add to cart
+                print(action=="-50")
                 if action=="-50":
                     qty = qty+1
                     query = "UPDATE cart SET qty = %s where p_id= %s"
@@ -291,20 +290,20 @@ def addToCart():
             else:
                 query = "INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)"
                 cur3.execute(query,(product_id,ip_add,1))
-            mysql.connection.commit()
-            cur3.close()
+                mysql.connection.commit()
 
         cur.execute("DELETE FROM cart WHERE qty = -1")
         mysql.connection.commit()
 
 
-    stmt = cur.execute("SELECT qty, product_price, product_title, p_id FROM cart , products where p_id=product_id")
+    stmt = cur.execute("SELECT DISTINCT * FROM cart, products where products.product_id = p_id")
     result2 = cur.fetchall()
-    outp = [str(c['qty']) + str(c['product_price']) + c['product_title'] + str(c['p_id']) for c in result2]
-    #print(result2)
+    outp = [str(c['qty']) + "," + str(c['product_price']) + ","+ c['product_title'] + "," + str(c['p_id']) + "," + c['product_image'] for c in result2]
+    print(result2)
     cur.close()
+    cur3.close()
 	# return as JSON
-    return json.dumps({"results":result}) 
+    return json.dumps({"results":result2}) 
 
 def getProducts(query):
     products = []

@@ -59,20 +59,25 @@
 						success: function(data){
 							var res = "";
 							// create the html with results
+                            //console.log(data.results)
 							for(i in data.results){
-								res += "<div>"+data.results[i]+"</div>";
+                               /* res = res + "<div>"+data.results[i].qty+"<br>"+data.results[i].product_title+"</div>";*/
+                                var image = data.results[i].product_image;
+                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="{{ url_for("static", filename= "img/'+image+'") }}" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="#">' + data.results[i].product_title+ '</a></h2></div><button class="cancel-btn"><i class="fa fa-trash"></i></button></div>';
+                                
 							}
-							$("#results").html(res);
+							$("#shopping-cart-list").html(res);
 						}
 
 					});
 				}
 				else{
-					$("#results").html(""); // set the results empty in case of empty string
+					$("#shopping-cart-list").html(""); // set the results empty in case of empty string
 				}
                 console.log(id);
                 
             }
+            addToCart(-1,-1);
     </script>
 
 	<!-- Google font -->
@@ -215,27 +220,9 @@
 							</a>
 							<div class="custom-menu">
 								<div id="shopping-cart">
-									<div class="shopping-cart-list">
-										<div class="product product-widget">
-											<div class="product-thumb">
-												<img src="{{ url_for('static', filename= 'img/thumb-product01.jpg') }}" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-												<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-											</div>
-											<button class="cancel-btn"><i class="fa fa-trash"></i></button>
-										</div>
-										<div class="product product-widget">
-											<div class="product-thumb">
-												<img src="{{ url_for('static', filename= 'img/thumb-product01.jpg') }}" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-												<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-											</div>
-											<button class="cancel-btn"><i class="fa fa-trash"></i></button>
-										</div>
+									<div class="shopping-cart-list" id="shopping-cart-list">
+										
+                                        
 									</div>
 									<div class="shopping-cart-btns">
 										<button class="main-btn">View Cart</button>
