@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2018 at 12:15 AM
+-- Generation Time: Nov 07, 2018 at 02:28 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.8
 
@@ -134,7 +134,7 @@ INSERT INTO `products` (`product_id`, `product_cat`, `product_brand`, `product_t
 (1, 1, 1, 'Fancy African Blazer', 40, 'African made Blazer', 'blazer.jpg', 'blazer, women, african'),
 (2, 3, 4, 'Kente Suit', 458, 'The best in town!!', 'kentesuit.jpg', 'kente, men, Nothern Ghana'),
 (3, 3, 3, 'Maasai Shirt', 350, 'Maasai touch shirt', 'maasaishirt.jpg', 'maasai, men, shirt'),
-(4, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'maasaibag.jpg', 'necklace,jewelclass'),
+(4, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'maasaibag.jpeg', 'necklace,jewelclass'),
 (5, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'dress.jpg', 'necklace,jewelclass'),
 (6, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'shuka.jpg', 'necklace,jewelclass'),
 (7, 2, 3, 'Fancy Necklace', 200, 'a fancy necklace for your neck', 'heavyneck.jpg', 'necklace,jewelclass'),
