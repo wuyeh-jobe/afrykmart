@@ -94,6 +94,95 @@
 	</footer>
 	<!-- /FOOTER -->
 
+		<script>
+			function liveSearch(value){
+				value = value.trim(); // remove any spaces around the text
+				if(value != ""){ // don't make requests with an empty string
+					$.ajax({
+						url: "search",
+						data: {searchText: value},
+						dataType: "json",
+						success: function(data){
+							var res = "";
+							// create the html with results
+							for(i in data.results){
+								res += "<div>"+data.results[i]+"</div>";
+							}
+							$("#results").html(res);
+						}
+
+					});
+				}
+				else{
+					$("#results").html(""); // set the results empty in case of empty string
+				}
+			}
+            function validate(){
+                if(document.getElementById('fullname').value == "" ||  document.getElementById('dob').value == "" || 
+                 document.getElementById('gender').value == "Select Gender" ||
+                   document.getElementById('email').value == "" ||
+                   document.getElementById('password').value == "" ||
+                  document.getElementById('confirmPassword').value == ""){
+                    alert("None of the fields should be empty");
+                    return false;
+                }
+
+                if(document.getElementById('password').value != document.getElementById('confirmPassword').value){
+                    alert("Passwords do not match!");
+                    return false;
+                }
+
+            }
+            function addToCart(id,a){
+                if(a == -50){
+                   alert("Product has been added to cart.");
+                }else if(a == -100){
+                    alert("Product has been removed from cart.");
+                }
+                value = id.trim(); // remove any spaces around the text
+				if(value != ""){ // don't make requests with an empty string
+					$.ajax({
+						url: "addToCart",
+						data: {product_id: value, action: a },
+						dataType: "json",
+						success: function(data){
+							var res = "";
+                            var res2 = '<thead> <tr> <th>Product</th>			<th></th>										<th class="text-center">Price</th>				<th class="text-center">Quantity</th>			<th class="text-center">Total</th>				<th class="text-right"></th>					</tr>	</thead>';
+							// create the html with results
+                            //console.log(data.results)
+                            var tp = 0;
+                            var tc = 0;
+							for(i in data.results){
+                                var image = data.results[i].product_image;
+                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="static/img/'+image+'")" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="#">' + data.results[i].product_title+ '</a></h2></div><button class="cancel-btn"><i class="fa fa-minus"></i></i></button></div>';
+                                tp = tp + data.results[i].qty;
+                                tc = tc + (data.results[i].product_price * data.results[i].qty);
+                                
+                                res2 = res2 + '<tr><td class="thumb"><img src="static/img/'+image+'" alt=""></td><td class="details"><a href="#">'+data.results[i].product_title+'</a><ul> <li><span>Size: XL</span></li><li><span>Color: Camelot</span></li></ul></td>	<td class="price text-center"><strong>  $'+data.results[i].product_price+'</strong><br></td><td class="qty text-center"><input class="input" type="number" value="'+data.results[i].qty+'"></td>	<td class="total text-center"><strong class="primary-color">'+ data.results[i].product_price * data.results[i].qty+ '</strong></td>	<td class="text-right"><button class="main-btn icon-btn"><i class="fa fa-close"></i></button></td></tr>' ;
+                                
+							}
+                            res2 = res2+ '<tfoot><tr><th class="empty" colspan="3"></th><th>SUBTOTAL</th><th colspan="2" class="sub-total"> $'+tc+'</th></tr><tr><th class="empty" colspan="3"></th>	<th>SHIPING</th><td colspan="2">Free Shipping</td></tr> <tr><th class="empty" colspan="3"></th><th>TOTAL</th><th colspan="2" class="total">'+tc+'</th></tr>	</tfoot>';
+                            //Fill the shopping cart using Ajax
+							$("#shopping-cart-list").html(res);
+                            //Fill the total quantity of items in the cart
+                            $("#qty").html(tp);
+                            //Fill the total cost of items in the cart
+                            $("#price_c").html("$"+tc);
+                            //Fill the shopping cart table
+                            $("#shopping-cart-table").html(res2);
+						}
+
+					});
+				}
+				else{
+					$("#shopping-cart-list").html(""); // set the results empty in case of empty string
+				}
+                console.log(id);
+                
+            }
+            
+            
+    </script>
 	<!-- jQuery Plugins -->
 	<script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
 	<script src="{{ url_for('static', filename= 'js/bootstrap.min.js') }}"></script>
@@ -101,6 +190,7 @@
 	<script src="{{ url_for('static', filename= 'js/nouislider.min.js') }}"></script>
 	<script src="{{ url_for('static', filename= 'js/jquery.zoom.min.js') }}"></script>
 	<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 
 </body>
 

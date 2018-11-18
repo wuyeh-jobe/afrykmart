@@ -42,13 +42,8 @@ def index():
     #This gets the picked products and pass them to the index page
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
     
-    cart_data = displayCart()[0]
-    cart_tq = displayCart()[1]
-    cart_tp = displayCart()[2]
-    #print(cart_data)
-    
     allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id")
-    return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts, cart=cart_data, tq = cart_tq, tp = cart_tp)
+    return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts)
 
 
 #This is for rendering the product-page.html template
@@ -364,7 +359,13 @@ def addToCart():
 	# return as JSON
     return json.dumps({"results":result2}) 
 
+@app.route("/viewcart")
+def viewCart():
+    session['index'] = False
+    return render_template("cart.html")
     
+
+#Displays cart at the top right hand corner, currently suspend because alternative method and more effective method discovered. 
 def displayCart():
     cur = mysql.connection.cursor()
     stmt = cur.execute("SELECT DISTINCT * FROM cart, products where products.product_id = p_id")
