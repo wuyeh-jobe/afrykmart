@@ -42,9 +42,13 @@ def index():
     #This gets the picked products and pass them to the index page
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
     
+    cart_data = displayCart()[0]
+    cart_tq = displayCart()[1]
+    cart_tp = displayCart()[2]
+    #print(cart_data)
     
     allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id")
-    return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts)
+    return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts, cart=cart_data, tq = cart_tq, tp = cart_tp)
 
 
 #This is for rendering the product-page.html template
@@ -208,7 +212,6 @@ def logout():
 @is_logged_in
 def admin_logout():
     session.clear()
-    flash('You are logged out', 'success')
     return redirect(url_for('admin_login'))
 
 
@@ -261,12 +264,10 @@ def admin_login():
                 session['role'] = role
                 # flash("Logged in as " + name + ".", 'success')
                 if role == "Admin":
-                    print("Admin")
                     return redirect(url_for('index_admin'))
 
                 else:
                     error = "Admin Login Only"
-                    flash("error")
                     return redirect(url_for('admin_login', error=error))
 
 
@@ -303,59 +304,81 @@ def search():
 	# return as JSON
     return json.dumps({"results":result}) 
 
+def selectQuery(query):
+    cur = mysql.connection.cursor()
+    result = cur.execute(query)
+    data = cur.fetchall()
+    cur.close()
+    return result, data
 
+def insertQuery(query,parameter):
+    cur = mysql.connection.cursor()
+    cur.execute(query,parameter)
+    #commit DB
+    mysql.connection.commit()
+    cur.close()
+    
+def deleteQuery(query):
+    cur = mysql.connection.cursor()
+    cur.execute(query)
+    mysql.connection.commit()
+    cur.close()
+    
+    
+    
 #This function is to add tp cart.
 @app.route("/addToCart")
 def addToCart():
     product_id = request.args['product_id'] # get product id
+    #print(product_id)
     action = request.args['action'] # get action
+    #print(action)
      #create cursor
     ip_add = request.remote_addr
-    cur = mysql.connection.cursor()
-    if product_id != -1:
-                #use cursor
-        cur2 =  mysql.connection.cursor()
-        result = cur.execute("SELECT * FROM cart")
-        print(result==0)
-        if (result==0):
-            query = 'INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)' 
-                #execute query
-            cur2.execute(query,(product_id,ip_add,1))
-                #commit DB
-            mysql.connection.commit()
-            cur2.close()
-        cur3 =  mysql.connection.cursor()
-        for data in cur.fetchall():
+    if product_id != "-1":
+        result = selectQuery("SELECT * FROM cart")
+        foundProduct = False
+        for data in result[1]:
             qty = data["qty"]
-            if data["p_id"] == int(product_id) and data["ip_add"]==ip_add:
+            if ((data["p_id"] == int(product_id)) and (data["ip_add"]==ip_add)):
+                foundProduct = True
                 #-50 is used to denote if a user wants to add to cart
                 print(action=="-50")
                 if action=="-50":
                     qty = qty+1
                     query = "UPDATE cart SET qty = %s where p_id= %s"
-                    cur3.execute(query,(qty,data["p_id"]))
+                    insertQuery(query,(qty,data["p_id"]))
                 else:
                     qty = qty-1
                     query = "UPDATE cart SET qty = %s where p_id= %s"
-                    cur3.execute(query,(qty,data["p_id"]))
-
-            else:
-                query = "INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)"
-                cur3.execute(query,(product_id,ip_add,1))
-                mysql.connection.commit()
-
-        cur.execute("DELETE FROM cart WHERE qty = -1")
-        mysql.connection.commit()
+                    insertQuery(query,(qty,data["p_id"]))
+        if (foundProduct == False):
+            query = "INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)"
+            insertQuery(query,(product_id,ip_add,1))
+                
+        deleteQuery("DELETE FROM cart WHERE qty = -1")
 
 
-    stmt = cur.execute("SELECT DISTINCT * FROM cart, products where products.product_id = p_id")
-    result2 = cur.fetchall()
-    outp = [str(c['qty']) + "," + str(c['product_price']) + ","+ c['product_title'] + "," + str(c['p_id']) + "," + c['product_image'] for c in result2]
-    print(result2)
-    cur.close()
-    cur3.close()
+    stmt = selectQuery("SELECT DISTINCT * FROM cart, products where products.product_id = p_id")
+    result2 = stmt[1]
 	# return as JSON
     return json.dumps({"results":result2}) 
+
+    
+def displayCart():
+    cur = mysql.connection.cursor()
+    stmt = cur.execute("SELECT DISTINCT * FROM cart, products where products.product_id = p_id")
+    all_data = cur.fetchall()
+    res = []
+    q = 0
+    p = 0
+    for data in all_data:
+        res.append((data["product_title"],data["product_image"],data["product_price"],data["qty"]))
+        q = q + data["qty"];
+        p = p + data["product_price"] * data["qty"]
+    cur.close()
+    return res, q, p
+    
 
 def getProducts(query):
     products = []
@@ -376,13 +399,11 @@ def getProducts(query):
         products.append(product_id+"#"+product_cat+"#"+product_title+"#"+product_price+"#"+product_desc+"#"+product_image+"#"+product_desc)
     return products
         
-        
-        
-    
+  
     
     
 #This is for rendering the template for admin
-@app.route('/index_admin')
+@app.route('/admin')
 def index_admin():
     return render_template('index_admin.html')
 

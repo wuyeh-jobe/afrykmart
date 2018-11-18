@@ -50,6 +50,11 @@
 
             }
             function addToCart(id,a){
+                if(a == -50){
+                   alert("Product has been added to cart.");
+                }else if(a == -100){
+                    alert("Product has been removed from cart.");
+                }
                 value = id.trim(); // remove any spaces around the text
 				if(value != ""){ // don't make requests with an empty string
 					$.ajax({
@@ -60,13 +65,19 @@
 							var res = "";
 							// create the html with results
                             //console.log(data.results)
+                            var tp = 0;
+                            var tc = 0;
 							for(i in data.results){
                                /* res = res + "<div>"+data.results[i].qty+"<br>"+data.results[i].product_title+"</div>";*/
                                 var image = data.results[i].product_image;
-                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="{{ url_for("static", filename= "img/'+image+'") }}" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="#">' + data.results[i].product_title+ '</a></h2></div><button class="cancel-btn"><i class="fa fa-trash"></i></button></div>';
+                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="static/img/'+image+'")" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="#">' + data.results[i].product_title+ '</a></h2></div><button class="cancel-btn"><i class="fa fa-minus"></i></i></button></div>';
+                                tp = tp + data.results[i].qty;
+                                tc = tc + (data.results[i].product_price * data.results[i].qty);
                                 
 							}
 							$("#shopping-cart-list").html(res);
+                            $("#qty").html(tp);
+                            $("#price_c").html("$"+tc);
 						}
 
 					});
@@ -77,7 +88,8 @@
                 console.log(id);
                 
             }
-            addToCart(-1,-1);
+            
+            
     </script>
 
 	<!-- Google font -->
@@ -107,8 +119,9 @@
 		<![endif]-->
 
 </head>
+    
 
-<body>
+<body onload="">
 	<!-- HEADER -->
 	<header>
 		<!-- top Header -->
@@ -212,15 +225,18 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">
 									<i class="fa fa-shopping-cart"></i>
-									<span class="qty">3</span>
+									<span class="qty" id="qty">{{tq}}</span>
 								</div>
 								<strong class="text-uppercase">My Cart:</strong>
 								<br>
-								<span>35.20$</span>
+								<span id="price_c">${{tp}}</span>
 							</a>
 							<div class="custom-menu">
 								<div id="shopping-cart">
 									<div class="shopping-cart-list" id="shopping-cart-list">
+                                        {% for data in cart%}
+                                            <div class="product product-widget"> <div class="product-thumb">  <img src="{{ url_for('static', **{'filename' : 'img/'+ data[1] } ) }}" alt=""></div><div class="product-body"><h3 class="product-price"> ${{data[2]}}<span class="qty"> x ' {{data[3]}} </span></h3><h2 class="product-name"><a href="#">{{ data[0] }}</a></h2></div><button class="cancel-btn"><i class="fa fa-minus"></i></i></button></div>  
+                                        {% endfor %}
 										
                                         
 									</div>
