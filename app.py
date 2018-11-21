@@ -456,4 +456,5 @@ def product_mgt():
 
 if __name__ == '__main__':
     app.secret_key = "114455"
+    app.debug = True
     app.run(debug=True)
