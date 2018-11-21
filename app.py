@@ -15,10 +15,10 @@ import os
 
 app = Flask(__name__)
 #config db
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'afrykmart'
+app.config['MYSQL_HOST'] = 'sql173.main-hosting.eu'
+app.config['MYSQL_USER'] = 'u228001103_afryk'
+app.config['MYSQL_PASSWORD'] = '7913788@Wuyeh'
+app.config['MYSQL_DB'] = 'u228001103_afryk'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 UPLOAD_FOLDER = 'static/uploads'
