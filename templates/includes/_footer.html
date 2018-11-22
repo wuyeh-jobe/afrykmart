@@ -141,6 +141,13 @@
                         alert("Product has been removed from cart.");
                     }
                 }
+                else{
+                    if(a == -50){
+                       alert("Quantity is being Increased.");
+                    }else if(a == -100){
+                        alert("Quantity is being Reduced.");
+                    }
+                }
                 value = id.trim(); // remove any spaces around the text
 				if(value != ""){ // don't make requests with an empty string
 					$.ajax({
@@ -160,8 +167,13 @@
                                 tp = tp + data.results[i].qty;
                                 tc = tc + (data.results[i].product_price * data.results[i].qty);
                                 
-                                res2 = res2 + '<tr><td class="thumb"><img src="static/img/'+image+'" alt=""></td><td class="details"><a href="#">'+data.results[i].product_title+'</a><ul> <li><span>Size: XL</span></li><li><span>Color: Camelot</span></li></ul></td>	<td class="price text-center"><strong>  $'+data.results[i].product_price+'</strong><br></td><td class="qty text-center total"><strong> '+data.results[i].qty+'</strong></td>	<td class="total text-center"><strong class="primary-color"> $'+ data.results[i].product_price * data.results[i].qty+ '</strong></td>	<td class="text-right"><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-50,0)" class="main-btn icon-btn"><i class="fa fa-plus"></i></button><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-100,0)" class="main-btn icon-btn"><i class="fa fa-minus"></i></button></td></tr>' ;
+                                res2 = res2 + '<tr><td class="thumb"><img src="static/img/'+image+'" alt=""></td><td class="details"><a href="#">'+data.results[i].product_title+'</a><ul> <li><span>Size: XL</span></li><li><span>Color: Camelot</span></li></ul></td>	<td class="price text-center"><strong>  $'+data.results[i].product_price+'</strong><br></td><td class="qty text-center total"><strong> '+data.results[i].qty+'</strong></td>	<td class="total text-center"><strong class="primary-color"> $'+ data.results[i].product_price * data.results[i].qty+ '</strong></td>	<td class="text-right"><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-50,0)" class="main-btn icon-btn"><i class="fa fa-plus"></i></button><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-100,0)" class="main-btn icon-btn">' ;
                                 
+                                if(data.results[i].qty =='1'){
+                                   res2 = res2 + '<i class="fa fa-times"></i></button></td></tr>';
+                                }else{
+                                    res2 = res2 + '<i class="fa fa-minus"></i></button></td></tr>';
+                                }
 							}
                             res2 = res2+ '<tfoot><tr><th class="empty" colspan="3"></th><th>SUBTOTAL</th><th colspan="2" class="sub-total"> $'+tc+'</th></tr><tr><th class="empty" colspan="3"></th>	<th>SHIPING</th><td colspan="2">Free Shipping</td></tr> <tr><th class="empty" colspan="3"></th><th>TOTAL</th><th colspan="2" class="total">$'+tc+'</th></tr>	</tfoot>';
                             //Fill the shopping cart using Ajax
@@ -179,7 +191,6 @@
 				else{
 					$("#shopping-cart-list").html(""); // set the results empty in case of empty string
 				}
-                console.log(id);
                 
             }
             

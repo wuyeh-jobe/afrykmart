@@ -331,6 +331,7 @@ def addToCart():
     #print(action)
      #create cursor
     ip_add = request.remote_addr
+    print(ip_add)
     if product_id != "-1":
         result = selectQuery("SELECT * FROM cart")
         foundProduct = False
@@ -352,11 +353,12 @@ def addToCart():
             query = "INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)"
             insertQuery(query,(product_id,ip_add,1))
                 
-        deleteQuery("DELETE FROM cart WHERE qty = -1")
+        deleteQuery("DELETE FROM cart WHERE qty = 0")
 
-
-    stmt = selectQuery("SELECT DISTINCT * FROM cart, products where cart.ip_add = %s",[ip_add])
-    result2 = stmt[1]
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM cart INNER JOIN products ON cart.p_id = products.product_id AND cart.ip_add = %s",[ip_add])
+    result2 = cur.fetchall()
+    cur.close()
 	# return as JSON
     return json.dumps({"results":result2}) 
 
