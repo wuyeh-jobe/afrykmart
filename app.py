@@ -355,7 +355,7 @@ def addToCart():
         deleteQuery("DELETE FROM cart WHERE qty = -1")
 
 
-    stmt = selectQuery("SELECT DISTINCT * FROM cart, products where products.product_id = p_id")
+    stmt = selectQuery("SELECT DISTINCT * FROM cart, products where cart.ip_add = %s",[ip_add])
     result2 = stmt[1]
 	# return as JSON
     return json.dumps({"results":result2}) 
