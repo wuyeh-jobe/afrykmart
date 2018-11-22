@@ -14,6 +14,7 @@ import os
 
 
 app = Flask(__name__)
+app.secret_key = "114455"
 #config db
 app.config['MYSQL_HOST'] = 'sql173.main-hosting.eu'
 app.config['MYSQL_USER'] = 'u228001103_afryk'
@@ -455,5 +456,4 @@ def product_mgt():
 
 
 if __name__ == '__main__':
-    app.secret_key = "114455"
     app.run(debug=True)
