@@ -335,7 +335,6 @@ def addToCart():
         ip_add = request.headers.getlist("X-Forwarded-For")[0]
     else:
         ip_add = request.remote_addr
-    print(ip_add)
     if product_id != "-1":
         result = selectQuery("SELECT * FROM cart")
         foundProduct = False
