@@ -330,7 +330,7 @@ def addToCart():
     action = request.args['action'] # get action
     #print(action)
      #create cursor
-    ip_add = request.remote_addr
+    ip_add = request.environ['REMOTE_ADDR']
     print(ip_add)
     if product_id != "-1":
         result = selectQuery("SELECT * FROM cart")
