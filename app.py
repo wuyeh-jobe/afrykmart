@@ -16,10 +16,10 @@ import os
 app = Flask(__name__)
 app.secret_key = "114455"
 #config db
-app.config['MYSQL_HOST'] = 'sql173.main-hosting.eu'
-app.config['MYSQL_USER'] = 'u228001103_afryk'
-app.config['MYSQL_PASSWORD'] = '7913788@Wuyeh'
-app.config['MYSQL_DB'] = 'u228001103_afryk'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'afrykmart'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -35,23 +35,17 @@ mysql = MySQL(app)
 def index():
     session['index'] = True
     #This gets the featured products and pass them to the index page
-    featuredProducts1 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 5")
+    featuredProducts1 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 5")
     #This gets the featured products and pass them to the index page
-    featuredProducts2 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
+    featuredProducts2 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     #This gets the latest products and pass them to the index page
-    latestProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
+    latestProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     #This gets the picked products and pass them to the index page
-    pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4")
+    pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     
-    allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id")
+    allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id")
     return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts)
 
-
-#This is for rendering the product-page.html template
-@app.route('/product')
-def product():
-    session['index'] = False
-    return render_template("product-page.html")
 
 
 #This is for rendering the products.html template
@@ -280,7 +274,9 @@ def admin_login():
 
     
     return render_template("admin_login.html")
-#This function for search the products available.
+
+
+#This function for search the products available, function that sends request in includes/_footer.html
 @app.route("/search")
 def search():
     searchText = request.args['searchText'] # get the text to search for
@@ -289,13 +285,10 @@ def search():
      #create cursor
     cur = mysql.connection.cursor()
         #get user by username
-    qresult = cur.execute("SELECT * FROM products WHERE product_title LIKE  %s", [text])
+    qresult = cur.execute("SELECT * FROM products WHERE product_title LIKE %s or product_desc LIKE %s or product_keywords LIKE %s", (text,text,text))
 	# Get the data returned by the query
     all_data = cur.fetchall()
-    
-    
-    result =  [c['product_title'] for c in all_data if searchText.lower() in c['product_title'].lower()]
-    #print(result)
+    result =  [(c['product_title'], c['product_id'])  for c in all_data]
     cur.close()
 	# return as JSON
     return json.dumps({"results":result}) 
@@ -320,6 +313,24 @@ def deleteQuery(query):
     mysql.connection.commit()
     cur.close()
     
+
+#This is for rendering the product-page.html template
+@app.route('/viewproduct/<string:idd>')
+def product(idd):
+    session['index'] = False
+    cur = mysql.connection.cursor()
+    product = cur.execute("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id where product_id = %s",[idd])
+    pr = []
+    if product > 0:
+        data = cur.fetchone();
+        pr.append((data["product_title"],data["product_price"],data["product_desc"],data["product_image"],data["product_keywords"],data["cat_name"],data["brand_name"]))
+    cur.close()
+    pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
+    cart = displayCart()[0]
+    q = displayCart()[1]
+    p = displayCart()[2]
+    return render_template("product-page.html",prs=pr, pp = pickedProducts,cart = cart,tq=q,tp=p)
+
     
     
 #This function is to add tp cart.

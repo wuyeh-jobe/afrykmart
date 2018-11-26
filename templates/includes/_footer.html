@@ -99,14 +99,14 @@
 				value = value.trim(); // remove any spaces around the text
 				if(value != ""){ // don't make requests with an empty string
 					$.ajax({
-						url: "search",
+						url: "/search",
 						data: {searchText: value},
 						dataType: "json",
 						success: function(data){
 							var res = "";
 							// create the html with results
 							for(i in data.results){
-								res += "<div>"+data.results[i]+"</div>";
+								res += "<div><a href='/viewproduct/"+data.results[i][1]+"'>"+data.results[i][0]+"</a></div>";
 							}
 							$("#results").html(res);
 						}
@@ -133,7 +133,7 @@
                 }
 
             }
-            function addToCart(id,a,p){
+            function addToCart(idd,a,p){
                 if (p != 0){
                     if(a == -50){
                        alert("Product has been added to cart.");
@@ -148,10 +148,10 @@
                         alert("Quantity is being Reduced.");
                     }
                 }
-                value = id.trim(); // remove any spaces around the text
+                value = idd.trim(); // remove any spaces around the text
 				if(value != ""){ // don't make requests with an empty string
 					$.ajax({
-						url: "addToCart",
+						url: "/addToCart",
 						data: {product_id: value, action: a },
 						dataType: "json",
 						success: function(data){
@@ -163,7 +163,7 @@
                             var tc = 0;
 							for(i in data.results){
                                 var image = data.results[i].product_image;
-                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="static/img/'+image+'")" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="#">' + data.results[i].product_title+ '</a></h2></div><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-100,0)" class="cancel-btn"><i class="fa fa-minus"></i></i></button></div>';
+                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="../static/img/'+image+'")" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="#">' + data.results[i].product_title+ '</a></h2></div><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-100,0)" class="cancel-btn"><i class="fa fa-minus"></i></i></button></div>';
                                 tp = tp + data.results[i].qty;
                                 tc = tc + (data.results[i].product_price * data.results[i].qty);
                                 
@@ -203,7 +203,6 @@
 	<script src="{{ url_for('static', filename= 'js/nouislider.min.js') }}"></script>
 	<script src="{{ url_for('static', filename= 'js/jquery.zoom.min.js') }}"></script>
 	<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
-
 </body>
 
 </html>
