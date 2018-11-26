@@ -57,11 +57,7 @@ def products():
 
 
 
-#This is for rendering the checkout.html template
-@app.route('/checkout')
-def checkout():
-    session['index'] = False
-    return render_template("checkout.html")
+
 
 
 #This is for rendering the login.html template
@@ -183,8 +179,20 @@ def is_logged_in(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash('Unauthourized access, please log in', 'danger')
+            flash('Please log in to proceed', 'danger')
             return redirect('login')
+
+    return wrap
+
+#check if logged_in, not be able to go to a link by changing url in bar
+def is_logged_in2(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('Please log in to proceed', 'danger')
+            return redirect('admin_login')
 
     return wrap
 
@@ -326,10 +334,7 @@ def product(idd):
         pr.append((data["product_title"],data["product_price"],data["product_desc"],data["product_image"],data["product_keywords"],data["cat_name"],data["brand_name"]))
     cur.close()
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
-    cart = displayCart()[0]
-    q = displayCart()[1]
-    p = displayCart()[2]
-    return render_template("product-page.html",prs=pr, pp = pickedProducts,cart = cart,tq=q,tp=p)
+    return render_template("product-page.html",prs=pr, pp = pickedProducts)
 
     
     
@@ -380,7 +385,14 @@ def addToCart():
 def viewCart():
     session['index'] = False
     return render_template("cart.html")
-    
+
+
+#This is for rendering the checkout.html template
+@app.route('/checkout')
+@is_logged_in  #Verify that the user is logged before accessing this page
+def checkout():
+    session['index'] = False
+    return render_template("checkout.html")
 
 #Displays cart at the top right hand corner, currently suspend because alternative method and more effective method discovered. 
 def displayCart():
