@@ -29,6 +29,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #init MYSQL
 mysql = MySQL(app)
 
+from werkzeug.datastructures import ImmutableOrderedMultiDict
+import requests
+
 
 #This renders the homepage
 @app.route('/')
@@ -46,6 +49,60 @@ def index():
     allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id")
     return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts)
 
+
+
+@app.route('/ipn/',methods=['POST'])
+def ipn():
+    try:
+        arg = ''
+        request.parameter_storage_class = ImmutableOrderedMultiDict
+        values = request.form
+        for x, y in values.iteritems():
+            arg += "&{x}={y}".format(x=x,y=y)
+
+        validate_url = 'https://www.sandbox.paypal.com' \
+                       '/cgi-bin/webscr?cmd=_notify-validate{arg}' \
+                       .format(arg=arg)
+        r = requests.get(validate_url)
+        if r.text == 'VERIFIED':
+            try:
+                payer_email =  thwart(request.form.get('payer_email'))
+                unix = int(time.time())
+                payment_date = thwart(request.form.get('payment_date'))
+                username = thwart(request.form.get('custom'))
+                last_name = thwart(request.form.get('last_name'))
+                payment_gross = thwart(request.form.get('payment_gross'))
+                payment_fee = thwart(request.form.get('payment_fee'))
+                payment_net = float(payment_gross) - float(payment_fee)
+                payment_status = thwart(request.form.get('payment_status'))
+                txn_id = thwart(request.form.get('txn_id'))
+            except Exception as e:
+                with open('afrykmart/ipnout.txt','a') as f:
+                    data = 'ERROR WITH IPN DATA\n'+str(values)+'\n'
+                    f.write(data)
+            
+            with open('afrykmart/ipnout.txt','a') as f:
+                data = 'SUCCESS\n'+str(values)+'\n'
+                f.write(data)
+
+            #c,conn = connection()
+            c = mysql.connection.cursor()
+            c.execute("INSERT INTO ipn (unix, payment_date, username, last_name, payment_gross, payment_fee, payment_net, payment_status, txn_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        (unix, payment_date, username, last_name, payment_gross, payment_fee, payment_net, payment_status, txn_id))
+            #conn.commit()
+            mysql.connection.commit()
+            c.close()
+            #conn.close()
+            gc.collect()
+
+        else:
+             with open('/afrykmart/ipnout.txt','a') as f:
+                data = 'FAILURE\n'+str(values)+'\n'
+                f.write(data)
+                
+        return r.text
+    except Exception as e:
+        return str(e)
 
 
 #This is for rendering the products.html template
@@ -416,6 +473,19 @@ def viewCart():
 def checkout():
     session['index'] = False
     return render_template("checkout.html")
+
+
+
+@app.route('/success/')
+def success():
+    try:
+        return render_template("index.html")
+    except Exception as e:
+        return(str(e))
+
+
+
+
 
 #Displays cart at the top right hand corner, currently suspend because alternative method and more effective method discovered. 
 def displayCart():
