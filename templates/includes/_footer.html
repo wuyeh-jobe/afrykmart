@@ -136,16 +136,16 @@
             function addToCart(idd,a,p){
                 if (p != 0){
                     if(a == -50){
-                       alert("Product has been added to cart.");
+                        swal("Product Added", "Product has been added to cart!", "success",{timer: 5000});
                     }else if(a == -100){
-                        alert("Product has been removed from cart.");
+                        swal("Product Added", "Product has been removed from cart!", "info",{timer: 5000});
                     }
                 }
                 else{
                     if(a == -50){
-                       alert("Quantity is being Increased.");
+                        swal({title: "Quantity Increased", text: "", icon: "success", button: "Sweet!",timer: 5000});
                     }else if(a == -100){
-                        alert("Quantity is being Reduced.");
+                        swal({title: "Quantity Reduced", text: "You can increase quantity or add product again!", icon: "info", button: "Awesome!",timer: 5000});
                     }
                 }
                 value = idd.trim(); // remove any spaces around the text
@@ -203,6 +203,7 @@
 	<script src="{{ url_for('static', filename= 'js/nouislider.min.js') }}"></script>
 	<script src="{{ url_for('static', filename= 'js/jquery.zoom.min.js') }}"></script>
 	<script src="{{ url_for('static', filename= 'js/main.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 
 </html>
