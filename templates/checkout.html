@@ -4,7 +4,7 @@
 	<div id="breadcrumb">
 		<div class="container">
 			<ul class="breadcrumb">
-				<li><a href="#">Home</a></li>
+				<li><a href="/">Home</a></li>
 				<li class="active">Checkout</li>
 			</ul>
 		</div>
@@ -19,8 +19,8 @@
 		<div class="container">
 			<!-- row -->
 			<div class="row">
-				<form id="checkout-form" class="clearfix">
-					<div class="col-md-6">
+				<!-- <form id="checkout-form" class="clearfix"> -->
+<!-- 					<div class="col-md-6">
 						<div class="billing-details">
 							<p>Already a customer ? <a href="#">Login</a></p>
 							<div class="section-title">
@@ -62,7 +62,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="col-md-6">
 						<div class="shiping-methods">
@@ -113,96 +113,34 @@
 								<div class="caption">
 									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 										<p>
+									<h5 style="text-align: center;">Pay Now</h5>
+									{% if session['logged_in'] %}
+										<form name="topaypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+											<input type="hidden" name="cmd" value="_xclick-subscriptions">
+											<input type="hidden" name="custom" value="{{session['name']}}"/>
+											<input type="hidden" name="business" value="faithmueni6@gmail.com">
+											<input type="hidden" name="item_name" value="subscription button">
+											<input type="hidden" name="item_number" value="500">
+											<input type="hidden" name="no_shipping" value="1">
+											<input type="hidden" name="a3" value="10.00">
+											<input type="hidden" name="p3" value="1">
+											<input type="hidden" name="t3" value="M">
+											<input type="hidden" name="src" value="1">
+											<input type="hidden" name="sra" value="1">
+											<input type="hidden" name="return" value="./success/">
+											<input type="hidden" name="cancel_return" value="/">
+											<input type="hidden" name="notify_url" value="/ipn/">
+											<input type="submit" value="PayNow" name="submit" title="PayPal - The safer, easier way to pay online!" class="btn btn-primary">
+										</form>	
+									{% else %}
+										<p>You need to be <a href="/login/" target="blank"><strong>logged in</strong></a> to subscribe.</p>
+									{% endif %}
+
 								</div>
 							</div>
 						</div>
 					</div>
-
-					<div class="col-md-12">
-						<div class="order-summary clearfix">
-							<div class="section-title">
-								<h3 class="title">Order Review</h3>
-							</div>
-							<table class="shopping-cart-table table">
-								<thead>
-									<tr>
-										<th>Product</th>
-										<th></th>
-										<th class="text-center">Price</th>
-										<th class="text-center">Quantity</th>
-										<th class="text-center">Total</th>
-										<th class="text-right"></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td class="thumb"><img src="./img/thumb-product01.jpg" alt=""></td>
-										<td class="details">
-											<a href="#">Product Name Goes Here</a>
-											<ul>
-												<li><span>Size: XL</span></li>
-												<li><span>Color: Camelot</span></li>
-											</ul>
-										</td>
-										<td class="price text-center"><strong>$32.50</strong><br><del class="font-weak"><small>$40.00</small></del></td>
-										<td class="qty text-center"><input class="input" type="number" value="1"></td>
-										<td class="total text-center"><strong class="primary-color">$32.50</strong></td>
-										<td class="text-right"><button class="main-btn icon-btn"><i class="fa fa-close"></i></button></td>
-									</tr>
-									<tr>
-										<td class="thumb"><img src="./img/thumb-product01.jpg" alt=""></td>
-										<td class="details">
-											<a href="#">Product Name Goes Here</a>
-											<ul>
-												<li><span>Size: XL</span></li>
-												<li><span>Color: Camelot</span></li>
-											</ul>
-										</td>
-										<td class="price text-center"><strong>$32.50</strong></td>
-										<td class="qty text-center"><input class="input" type="number" value="1"></td>
-										<td class="total text-center"><strong class="primary-color">$32.50</strong></td>
-										<td class="text-right"><button class="main-btn icon-btn"><i class="fa fa-close"></i></button></td>
-									</tr>
-									<tr>
-										<td class="thumb"><img src="./img/thumb-product01.jpg" alt=""></td>
-										<td class="details">
-											<a href="#">Product Name Goes Here</a>
-											<ul>
-												<li><span>Size: XL</span></li>
-												<li><span>Color: Camelot</span></li>
-											</ul>
-										</td>
-										<td class="price text-center"><strong>$32.50</strong></td>
-										<td class="qty text-center"><input class="input" type="number" value="1"></td>
-										<td class="total text-center"><strong class="primary-color">$32.50</strong></td>
-										<td class="text-right"><button class="main-btn icon-btn"><i class="fa fa-close"></i></button></td>
-									</tr>
-								</tbody>
-								<tfoot>
-									<tr>
-										<th class="empty" colspan="3"></th>
-										<th>SUBTOTAL</th>
-										<th colspan="2" class="sub-total">$97.50</th>
-									</tr>
-									<tr>
-										<th class="empty" colspan="3"></th>
-										<th>SHIPING</th>
-										<td colspan="2">Free Shipping</td>
-									</tr>
-									<tr>
-										<th class="empty" colspan="3"></th>
-										<th>TOTAL</th>
-										<th colspan="2" class="total">$97.50</th>
-									</tr>
-								</tfoot>
-							</table>
-							<div class="pull-right">
-								<button class="primary-btn">Place Order</button>
-							</div>
-						</div>
-
-					</div>
-				</form>
+				<!-- </form> -->
 			</div>
 			<!-- /row -->
 		</div>
