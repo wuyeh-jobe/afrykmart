@@ -363,7 +363,7 @@ def addFromSingle():
             cur.execute("UPDATE cart SET qty = %s WHERE p_id = %s",(newQty,p_id))
             mysql.connection.commit()
         cur.close()
-        flash("Added",'Success')
+        flash('Product Added!','Success')
         return redirect(url_for('viewCart'))
         
  
@@ -372,15 +372,8 @@ def addFromSingle():
 @app.route("/addToCart")
 def addToCart():
     product_id = request.args['product_id'] # get product id
-    #print(product_id)
     action = request.args['action'] # get action
-    #print(action)
-     #create cursor
-    ip_add = ""
-    if request.headers.getlist("X-Forwarded-For"):
-        ip_add = request.headers.getlist("X-Forwarded-For")[0]
-    else:
-        ip_add = request.remote_addr
+    ip_add = ipAddress()
     if product_id != "-1":
         result = selectQuery("SELECT * FROM cart")
         foundProduct = False
