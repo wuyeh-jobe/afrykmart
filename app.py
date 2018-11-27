@@ -393,7 +393,7 @@ def product(idd):
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     return render_template("product-page.html",prs=pr, pp = pickedProducts)
 
-
+#This function renders product page base sidelinks
 @app.route('/viewproducts/<string:id>')
 def viewproducts(id):
     session['index'] = False
@@ -401,7 +401,7 @@ def viewproducts(id):
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     return render_template("products.html",ap=products, pp = pickedProducts)
 
-
+#This function gets the ip address of the clients computer
 def ipAddress():
     ip_add = ""
     if request.headers.getlist("X-Forwarded-For"):
