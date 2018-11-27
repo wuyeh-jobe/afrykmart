@@ -39,13 +39,16 @@
 							<p><strong>Availability:</strong> In Stock</p>
 							<p><strong>Brand:</strong> {{pr[6]}}</p>
 							<p>{{pr[2]}}</p>
-							<div class="product-btns">
-								<div class="qty-input">
-									<span class="text-uppercase">QTY: </span>
-									<input class="input" type="number">
-								</div>
-								<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-							</div>
+                            <form method="POST" action="/addSingle">
+                                <div class="product-btns">
+                                    <div class="qty-input">
+                                        <span class="text-uppercase">QTY: </span>
+                                        <input class="input" type="number" name="qty" value="1" min="1">
+                                        <input class="input" type="hidden" name="p_id" value="{{pr[7]}}">
+                                    </div>
+                                    <button type="submit" class="primary-btn add-to-cart" ><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                </div>
+                            </form>  
 						</div>
 					</div>
 					<div class="col-md-12">

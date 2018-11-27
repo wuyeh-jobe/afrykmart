@@ -331,13 +331,43 @@ def product(idd):
     pr = []
     if product > 0:
         data = cur.fetchone();
-        pr.append((data["product_title"],data["product_price"],data["product_desc"],data["product_image"],data["product_keywords"],data["cat_name"],data["brand_name"]))
+        pr.append((data["product_title"],data["product_price"],data["product_desc"],data["product_image"],data["product_keywords"],data["cat_name"],data["brand_name"],data["product_id"]))
     cur.close()
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     return render_template("product-page.html",prs=pr, pp = pickedProducts)
 
+
+def ipAddress():
+    ip_add = ""
+    if request.headers.getlist("X-Forwarded-For"):
+            ip_add = request.headers.getlist("X-Forwarded-For")[0]
+    else:
+        ip_add = request.remote_addr
+    return ip_add
     
-    
+#This function adds to cart from the single product page view
+@app.route("/addSingle", methods=["POST","GET"])
+def addFromSingle():
+    if request.method == "POST":
+        p_id = request.form['p_id']
+        qty = request.form['qty']
+        cur = mysql.connection.cursor()
+        result = cur.execute("SELECT * FROM cart where p_id = %s",[p_id])
+        if result==0:
+            query = "INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)"
+            insertQuery(query,(int(p_id),ipAddress(),int(qty)))
+            
+        for data in cur.fetchall():
+            oldQty = data['qty']
+            newQty = int(qty) + oldQty
+            cur.execute("UPDATE cart SET qty = %s WHERE p_id = %s",(newQty,p_id))
+            mysql.connection.commit()
+        cur.close()
+        flash("Added",'Success')
+        return redirect(url_for('viewCart'))
+        
+ 
+            
 #This function is to add tp cart.
 @app.route("/addToCart")
 def addToCart():
