@@ -29,19 +29,20 @@
                         <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                             <thead>
                                 <tr>
-                                    <th>Product Name</th>
+                                    <th>Product ID</th>
                                     <th>Category</th>
-                                    <th>Brand</th>
+                                    <th>Product Title</th>
                                     <th>Price ($)</th>
-                                    <th>Quantity</th>
-                                    <th>Description</th>
-                                    <th>Key Words</th>
+                                    <th>Descr</th>
+                                    <th>Image</th>
+                                    <th>Keywords</th>
+                                    <th>Brand</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- This function loops through array passed from the app.py -->
-                                {% for product in products %}
+                                {% for product in ap %}
                                 <tr class="odd gradeX">
                                     <td>{{product.split('#')[0]}}</td>
                                     <td>{{product.split('#')[1]}}</td>
@@ -49,75 +50,93 @@
                                     <td>{{product.split('#')[3]}}</td>
                                     <td>{{product.split('#')[4]}}</td>
                                     <td>{{product.split('#')[5]}}</td>
-                                    <td>Africa, Ghana</td>
+                                    <td>{{product.split('#')[6]}}</td>
+                                    <td>{{product.split('#')[7]}}</td>
+
                                     <td>
                                         <button class="btn btn-info" data-toggle="modal" data-target="#{{product.split('#')[0]}}">Update</button>
                                         <button class="btn btn-danger" data-toggle="modal" data-target="#{{product.split('#')[0]}}1">Delete</button>
                                     </td>
                                 </tr>
-                                
+
                                 <!-- This is a modal box for deleting products -->
                                 <div class="modal fade" id="{{product.split('#')[0]}}1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Delete {{product.split('#')[0]}}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Delete {{product.split('#')[2]}}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <p>Are you sure you want to delete '{{product.split('#')[2]}}' ?</p>
+                                                <form method="POST" action="/delete/{{product.split('#')[0]}}">
+
+                                                    <input type="hidden" name="p_id" class="form-control" value="{{product.split('#')[0]}}">
+
+                                                    <button type="submit" class="btn btn-danger">
+                                                        Yes
+                                                        <i class="fa fa-frown-o"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-info" data-dismiss="modal">
+                                                        N0
+                                                        <i class="fa fa-smile-o"> </i>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="modal-body text-center">
-                                          <p>Are you sure you want to delete '{{product.split('#')[0]}}' ?</p>
-                                          <form method="POST" action="/delete">
-                                              
-                                            <input type="hidden" name="p_id" class="form-control"
-                                            value="{{product.split('#')[7]}}">
-                                              
-                                            <button type="submit" class="btn btn-danger">
-                                               Yay <i class="fa fa-frown-o"></i></button>
-                                            <button type="button" class="btn btn-info" data-dismiss="modal">
-                                              Nay<i class="fa fa-smile-o"> </i></button>
-                                          </form>
-                                        </div>
-                                    </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Modal box for updating a product product, it is prefilled using "value" element in input tags -->
                                 <div class="modal fade" id="{{product.split('#')[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Update {{product.split('#')[0]}}</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">Update {{product.split('#')[2]}}</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="POST">
+                                                <form method="POST" action="/edit/{{product.split('#')[0]}}">
                                                     <div class="form-group">
                                                         <label for="product-name" class="col-form-label">Product Name:</label>
-                                                        <input type="text" class="form-control" id="title" name="title" value="{{product.split('#')[0]}}">
+                                                        <input type="text" class="form-control" id="title" name="title" value="{{product.split('#')[2]}}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="product-cat" class="col-form-label">Product Category:</label>
-                                                        <input type="number" class="form-control" id="category" name="category" value="{{product.split('#')[1]}}">
+                                                        <br>
+                                                        <select id="thecategory" name="category" style="width:360px;height:40px; margin-left:-4px">
+                                                            {% for item in ca %}
+                                                            <!-- <option value="Select Category" size="25">Select Category</option> -->
+                                                            <option value="{{item.split('#')[0]}}">{{item.split('#')[1]}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <!-- <input type="text" class="form-control" id="category" name="category" value="{{product.split('#')[1]}}"> -->
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="product-price" class="col-form-label">Product Brand:</label>
-                                                        <input type="number" class="form-control" id="price" name="brand" value="{{product.split('#')[2]}}">
+                                                        <br>
+                                                        <select id="thecategory" name="brand" style="width:360px;height:40px; margin-left:-4px">
+                                                            {% for brand in brand %}
+                                                            <!-- <option value="Select Category" size="25">Select Category</option> -->
+                                                            <option value="{{brand.split('#')[0]}}">{{brand.split('#')[1]}}</option>
+                                                            {% endfor %}
+                                                        </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="product-price" class="col-form-label">Product price:</label>
-                                                        <input type="number" class="form-control" id="price" name="price" value="{{product.split('#')[3]}}">
+                                                        <label for="product-price" class="col-form-label" max="1">Product price:</label>
+                                                        <input type="text" class="form-control" id="price" name="price" value="{{product.split('#')[3]}}">
                                                     </div>
-                                                    <div class="form-group">
+                                                    <!-- <div class="form-group">
                                                         <label for="product-quantity" class="col-form-label">Product Quantity:</label>
                                                         <input type="number" class="form-control" id="quantity" name="quantity" value="{{product.split('#')[4]}}">
-                                                    </div>
+                                                    </div> -->
                                                     <div class="form-group">
                                                         <label for="product-desc" class="col-form-label">Product Description:</label>
-                                                        <textarea class="form-control" id="description" name="description" value="{{product.split('#')[5]}}"></textarea>
+                                                        <input type="text" class="form-control" id="description" name="description" value="{{product.split('#')[4]}}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="keywords" class="col-form-label">Key Words:</label>
@@ -126,7 +145,7 @@
                                                     <input type="hidden" class="form-control" id="p_id" name="p_id" value="{{product.split('#')[7]}}">
                                                     <div class="form-group">
                                                         <label for="file Upload" class="col-form-label">File Upload:</label>
-                                                        <input type="file" class="form-control" id="fileUpload" name="fileUpload">
+                                                        <input type="file" class="form-control" id="fileUpload" name="fileUpload" value="{{product.split('#')[5]}}">
                                                     </div>
                                                     <button type="submit" name="submit" class="btn btn-primary" value="Add Product">Update Product</button>
                                                 </form>
@@ -163,27 +182,39 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST">
+                <form method="post" action="">
                     <div class="form-group">
                         <label for="product-name" class="col-form-label">Product Name:</label>
                         <input type="text" class="form-control" id="title" name="title">
                     </div>
                     <div class="form-group">
                         <label for="product-cat" class="col-form-label">Product Category:</label>
-                        <input type="number" class="form-control" id="category" name="category">
+                        <br>
+                        <select id="thecategory" name="category" style="width:360px;height:40px; margin-left:-4px">
+                            {% for item in ca %}
+                            <!-- <option value="Select Category" size="25">Select Category</option> -->
+                            <option value="{{item.split('#')[0]}}">{{item.split('#')[1]}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="product-price" class="col-form-label">Product Brand:</label>
-                        <input type="number" class="form-control" id="price" name="brand">
+                        <br>
+                        <select id="thecategory" name="brand" style="width:360px;height:40px; margin-left:-4px">
+                            {% for brand in brand %}
+                            <!-- <option value="Select Category" size="25">Select Category</option> -->
+                            <option value="{{brand.split('#')[0]}}">{{brand.split('#')[1]}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="product-price" class="col-form-label">Product price:</label>
-                        <input type="number" class="form-control" id="price" name="price">
+                        <label for="product-price" class="col-form-label" max="1">Product price:</label>
+                        <input type="text" class="form-control" id="price" name="price">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="product-quantity" class="col-form-label">Product Quantity:</label>
                         <input type="number" class="form-control" id="quantity" name="quantity">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="product-desc" class="col-form-label">Product Description:</label>
                         <textarea class="form-control" id="description" name="description"></textarea>
@@ -196,7 +227,7 @@
                         <label for="file Upload" class="col-form-label">File Upload:</label>
                         <input type="file" class="form-control" id="fileUpload" name="fileUpload">
                     </div>
-                    <button type="submit" name="submit" class="btn btn-primary" value="Add Product">Add Product</button>
+                    <button name="submit" class="btn btn-primary" value="Add Product" type="submit">Add Product</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -208,7 +239,7 @@
 
 <!-- End of modal box for adding product -->
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -227,7 +258,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 </div>
 <!-- end wrapper -->
