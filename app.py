@@ -449,22 +449,6 @@ def deleteQuery(query):
 
 
 
-#This function is to add tp cart.
-@app.route("/addToCart")
-def addToCart():
-    product_id = request.args['product_id']  # get product id
-    #print(product_id)
-    action = request.args['action']  # get action
-    #print(action)
-    #create cursor
-    ip_add = ""
-    if request.headers.getlist("X-Forwarded-For"):
-        ip_add = request.headers.getlist("X-Forwarded-For")[0]
-    else:
-        ip_add = request.remote_addr
-
-    
-
 #This is for rendering the product-page.html template
 @app.route('/viewproduct/<string:idd>')
 def product(idd):
