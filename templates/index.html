@@ -88,8 +88,8 @@
 									<div class="product-label">
 										<span>New</span>
 										<span class="sale">-20%</span>
-									</div>
-									<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
+									</div>                                    
+                                    <a href="/viewproduct/{{product.split('#')[0]}}"><button class="main-btn quick-view"><i class="fa fa-search-plus"></i> View</button></a>
                                     <img src="{{ url_for('static', **{'filename' : 'img/'+product.split('#')[5] } ) }}" alt="">
 								</div>
 								<div class="product-body">
@@ -103,7 +103,7 @@
 									</div>
 									<h2 class="product-name"><a href="#">{{ product.split("#")[2] }}</a></h2>
 									<div class="product-btns">
-										<button class="primary-btn add-to-cart" id="{{ product.split('#')[0] }}" onclick="addToCart(this.id,-50,1)"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+										<button class="primary-btn add-to-cart" id="{{product.split('#')[0]}}" onclick="addToCart(this.id,-50,1)"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
 									</div>
 								</div>
 							</div>
@@ -164,7 +164,7 @@
 										<span>New</span>
 										<span class="sale">-20%</span>
 									</div>
-									<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
+									<a href="/viewproduct/{{product.split('#')[0]}}"><button class="main-btn quick-view"><i class="fa fa-search-plus"></i> View </button></a>
                                     <img src="{{ url_for('static', **{'filename' : 'img/'+product.split('#')[5] } ) }}" alt="">
 								</div>
 								<div class="product-body">
@@ -216,7 +216,7 @@
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="product product-single">
 						<div class="product-thumb">
-							<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
+							<a href="/viewproduct/{{product.split('#')[0]}}"><button class="main-btn quick-view"><i class="fa fa-search-plus"></i> View</button></a>
 							 <img src="{{ url_for('static', **{'filename' : 'img/'+ product.split('#')[5] } ) }}" alt="">
 						</div>
 						<div class="product-body">
@@ -257,7 +257,7 @@
 				<div class="col-md-3 col-sm-6 col-xs-6">
 					<div class="product product-single">
 						<div class="product-thumb">
-							<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
+							<a href="/viewproduct/{{product.split('#')[0]}}"><button class="main-btn quick-view"><i class="fa fa-search-plus"></i> View </button></a>
 							 <img src="{{ url_for('static', **{'filename' : 'img/'+ product.split('#')[5] } ) }}" alt="">
 						</div>
 						<div class="product-body">

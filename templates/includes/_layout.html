@@ -9,7 +9,9 @@
 
 	<title>AfrykMart - Products you can trust!</title>
     
-
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    
 	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet">
 
@@ -196,142 +198,17 @@
                 {% endif %}
 					<span class="category-header">Categories <i class="fa fa-list"></i></span>
 					<ul class="category-list">
-						<li class="dropdown side-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Afryk Print Clothes <i class="fa fa-angle-right"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Men</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Women</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">Authentic Products</h2>
-												<h3 class="white-color font-weak">HOT DEALS</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li><a href="#">Afryk Toiletry</a></li>
-						<li><a href="#">Afryk Bracelets</a></li>
-						<li><a href="#">Afryk Sourvinirs</a></li>
-						<li><a href="#">Afryk Innerwear</a></li>
-						<li><a href="#">West-African Collection</a></li>
-						<li><a href="#">Southern-African Collection </a></li>
-						<li><a href="#">Northern-African Collection</a></li>
-                        <li class="dropdown side-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Afryk Footwear <i class="fa fa-angle-right"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Men</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Women</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">Authentic Products</h2>
-												<h3 class="white-color font-weak">HOT DEALS</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
-                        <li class="dropdown side-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Afryk Jewellery <i class="fa fa-angle-right"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Men</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Women</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">Authentic Products</h2>
-												<h3 class="white-color font-weak">HOT DEALS</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
+<<<<<<< HEAD
+						
+						<li><a href="/viewproducts/1">Afryk Toiletry</a></li>
+						<li><a href="/viewproducts/2">Afryk Print Clothes</a></li>
+						<li><a href="/viewproducts/3">Afryk Footwear</a></li>
+						<li><a href="/viewproducts/4">Afryk Jewellery</a></li>
+						<li><a href="/viewproducts/5">Men</a></li>
+						<li><a href="/viewproducts/6">Women</a></li>
+						<li><a href="/viewproducts/7">West-African Collection </a></li>
+						<li><a href="/viewproducts/8">East-African Collection</a></li>
+						<li><a href="/viewproducts/9">African Souvenirs</a></li>
 						
 					</ul>
 				</div>
