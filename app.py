@@ -51,6 +51,8 @@ def index():
 
 
 
+
+
 @app.route('/ipn/',methods=['POST'])
 def ipn():
     try:
@@ -401,6 +403,13 @@ def viewproducts(id):
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     return render_template("products.html",ap=products, pp = pickedProducts)
 
+#filter by brand
+@app.route('/viewproductss/<string:i>')
+def viewproductss(i):
+    session['index'] = False
+    productss = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id where brand_id = "+i)
+    pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
+    return render_template("products.html",ap=productss, pp = pickedProducts)
 
 def ipAddress():
     ip_add = ""
