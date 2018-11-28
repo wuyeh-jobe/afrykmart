@@ -115,23 +115,33 @@
 										<p>
 									<h5 style="text-align: center;">Pay Now</h5>
 									{% if session['logged_in'] %}
-										<form name="topaypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
-											<input type="hidden" name="cmd" value="_xclick-subscriptions">
-											<input type="hidden" name="custom" value="{{session['name']}}"/>
-											<input type="hidden" name="business" value="faithmueni6@gmail.com">
-											<input type="hidden" name="item_name" value="subscription button">
-											<input type="hidden" name="item_number" value="500">
-											<input type="hidden" name="no_shipping" value="1">
-											<input type="hidden" name="a3" value="10.00">
-											<input type="hidden" name="p3" value="1">
-											<input type="hidden" name="t3" value="M">
-											<input type="hidden" name="src" value="1">
-											<input type="hidden" name="sra" value="1">
-											<input type="hidden" name="return" value="./success/">
-											<input type="hidden" name="cancel_return" value="/">
-											<input type="hidden" name="notify_url" value="/ipn/">
-											<input type="submit" value="PayNow" name="submit" title="PayPal - The safer, easier way to pay online!" class="btn btn-primary">
-										</form>	
+										<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" name="paypal">
+
+										  <!-- Identify your business so that you can collect the payments. -->
+										  <input type="hidden" name="business" value="faithmueni6@gmail.com">
+
+										  <!-- Specify a Buy Now button. -->
+										  <input type="hidden" name="cmd" value="_xclick">
+
+										  <!-- Specify details about the item that buyers will purchase. -->
+										  
+										  <input type="hidden" name="amount" value="{{session['amount']}}">
+										  <input type="hidden" name="currency_code" value="USD">
+
+										  <input type="hidden" name="return" value="/">
+										  <input type="hidden" name="cancel_return" value="http://localhost:5000/index.html">
+										  <input type="hidden" name="notify_url" value="http://localhost:5000/ipn/">
+										  <input type="hidden" name="rm" value="2"> 
+										   
+										  <center>
+										  <!-- Display the payment button. -->
+										  <input type="image" name="submit" border="0"
+										  src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
+										  alt="Buy Now" name="payb">
+										  <img alt="" border="0" width="1" height="1"
+										  src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" >
+										 </center>
+										</form>
 									{% else %}
 										<p>You need to be <a href="/login/" target="blank"><strong>logged in</strong></a> to subscribe.</p>
 									{% endif %}

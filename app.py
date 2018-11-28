@@ -472,16 +472,14 @@ def viewCart():
 @is_logged_in  #Verify that the user is logged before accessing this page
 def checkout():
     session['index'] = False
+    session["amount"] = displayCart()[2]
     return render_template("checkout.html")
 
 
 
-@app.route('/success/')
+@app.route('/success/',methods=['GET', 'POST'])
 def success():
-    try:
-        return render_template("index.html")
-    except Exception as e:
-        return(str(e))
+        return redirect(url_for("index"))
 
 
 
@@ -501,7 +499,7 @@ def displayCart():
         p = p + data["product_price"] * data["qty"]
     cur.close()
     return res, q, p
-    
+
 
 def getProducts(query):
     products = []
