@@ -633,6 +633,21 @@ def displayProducts(query):
     return products
 
 
+def loadCategories():
+    cat_name=[]
+    cat_id=[]
+    sql ="SELECT * FROM categories"
+    cur = mysql.connection.cursor()
+    result = cur.execute(sql)
+    all_data = cur.fetchall()
+    for data in all_data:
+        category_id = data['cat_id']
+        category_cat = data['cat_name']
+        cat_id.append(category_id)
+        cat_name.append(category_cat)
+    return cat_id,cat_name
+
+
 def displayCategory(query):
     products = []
     #create cursor
