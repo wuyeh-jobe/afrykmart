@@ -8,10 +8,8 @@ from flask import request
 import datetime
 import json
 
-
 from werkzeug.utils import secure_filename
 import os
-
 
 app = Flask(__name__)
 app.secret_key = "114455"
@@ -38,6 +36,34 @@ import requests
 def index():
     session['index'] = True
     #This gets the featured products and pass them to the index page
+
+    featuredProducts1 = getProducts(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 5"
+    )
+    #This gets the featured products and pass them to the index page
+    featuredProducts2 = getProducts(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4"
+    )
+    #This gets the latest products and pass them to the index page
+    latestProducts = getProducts(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4"
+    )
+    #This gets the picked products and pass them to the index page
+    pickedProducts = getProducts(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND() limit 4"
+    )
+
+    allProducts = getProducts(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id"
+    )
+    return render_template(
+        "index.html",
+        fp=featuredProducts1,
+        fp2=featuredProducts2,
+        lp=latestProducts,
+        ap=allProducts,
+        pp=pickedProducts)
+
     featuredProducts1 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 5")
     #This gets the featured products and pass them to the index page
     featuredProducts2 = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
@@ -52,7 +78,10 @@ def index():
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> bacac56926fb2d5002a8357b7a293e9eaca9ec96
 @app.route('/ipn/',methods=['POST'])
 def ipn():
     try:
@@ -111,9 +140,33 @@ def ipn():
 @app.route('/products')
 def products():
     session['index'] = False
-    allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND()")
-    return render_template("products.html",ap = allProducts)
+    allProducts = getProducts(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND()"
+    )
+    return render_template("products.html", ap=allProducts)
 
+
+#This is for rendering the admin_products.html template
+@app.route('/product_mgt')
+def admin_products():
+    session['index'] = False
+    allProducts = displayProducts(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id INNER JOIN brands ON products.product_cat= brands.brand_id"
+    )
+    categories = displayCategory("SELECT * FROM categories")
+    brands = displayBrand("SELECT * FROM brands")
+    return render_template(
+        "product_mgt.html", ap=allProducts, ca=categories, brand=brands)
+
+
+#This is for rendering the categories in a dropdown
+@app.route('/category')
+def category_products():
+    session['index'] = False
+    allCategories = displayCategory(
+        "SELECT * FROM categories INNER JOIN categories ON products.product_id = categories.cat_id"
+    )
+    return render_template("product_mgt.html", items=allCategories)
 
 
 
@@ -157,7 +210,7 @@ def login():
             cur.close()
         else:
             error = "Email not found. Please create a new account if you haven't"
-            return render_template('login.html', error=error) 
+            return render_template('login.html', error=error)
     return render_template("login.html")
 
 
@@ -264,6 +317,7 @@ def logout():
     flash('You are logged out', 'success')
     return redirect(url_for('index'))
 
+
 #admin logout
 @app.route('/admin_logout')
 @is_logged_in
@@ -292,6 +346,7 @@ def orders():
 def users_details():
     session['index'] = False
     return render_template("users_details.html")
+
 
 #This is for rendering the admin_login.html template
 @app.route('/admin_login', methods=["POST", "GET"])
@@ -327,8 +382,6 @@ def admin_login():
                     error = "Admin Login Only"
                     return redirect(url_for('admin_login', error=error))
 
-
-
             else:
                 error = "Wrong password."
                 return render_template('admin_login.html', error=error)
@@ -336,29 +389,45 @@ def admin_login():
             cur.close()
         else:
             error = "Email not found. Please check email input"
-            return render_template('admin_login.html', error=error) 
-    
+            return render_template('admin_login.html', error=error)
 
-    
     return render_template("admin_login.html")
 
 
+
+#This function for search the products available.
+
 #This function for search the products available, function that sends request in includes/_footer.html
+
 @app.route("/search")
 def search():
-    searchText = request.args['searchText'] # get the text to search for
-    text = "%" + request.args['searchText'] + "%" 
-	# create an array with the query
-     #create cursor
+    searchText = request.args['searchText']  # get the text to search for
+    text = "%" + request.args['searchText'] + "%"
+    # create an array with the query
+    #create cursor
     cur = mysql.connection.cursor()
+
+    #get user by username
+    qresult = cur.execute(
+        "SELECT * FROM products WHERE product_title LIKE  %s", [text])
+    # Get the data returned by the query
+    all_data = cur.fetchall()
+
+    result = [
+        c['product_title'] for c in all_data
+        if searchText.lower() in c['product_title'].lower()
+    ]
+    #print(result)
         #get user by username
     qresult = cur.execute("SELECT * FROM products WHERE product_title LIKE %s or product_desc LIKE %s or product_keywords LIKE %s", (text,text,text))
 	# Get the data returned by the query
     all_data = cur.fetchall()
     result =  [(c['product_title'], c['product_id'])  for c in all_data]
+
     cur.close()
-	# return as JSON
-    return json.dumps({"results":result}) 
+    # return as JSON
+    return json.dumps({"results": result})
+
 
 def selectQuery(query):
     cur = mysql.connection.cursor()
@@ -367,19 +436,22 @@ def selectQuery(query):
     cur.close()
     return result, data
 
-def insertQuery(query,parameter):
+
+def insertQuery(query, parameter):
     cur = mysql.connection.cursor()
-    cur.execute(query,parameter)
+    cur.execute(query, parameter)
     #commit DB
     mysql.connection.commit()
     cur.close()
-    
+
+
 def deleteQuery(query):
     cur = mysql.connection.cursor()
     cur.execute(query)
     mysql.connection.commit()
     cur.close()
-    
+
+
 
 #This is for rendering the product-page.html template
 @app.route('/viewproduct/<string:idd>')
@@ -395,7 +467,7 @@ def product(idd):
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     return render_template("product-page.html",prs=pr, pp = pickedProducts)
 
-
+#This function renders product page base sidelinks
 @app.route('/viewproducts/<string:id>')
 def viewproducts(id):
     session['index'] = False
@@ -403,7 +475,7 @@ def viewproducts(id):
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     return render_template("products.html",ap=products, pp = pickedProducts)
 
-#filter by brand
+
 @app.route('/viewproductss/<string:i>')
 def viewproductss(i):
     session['index'] = False
@@ -411,6 +483,7 @@ def viewproductss(i):
     pickedProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id ORDER BY RAND() limit 4")
     return render_template("products.html",ap=productss, pp = pickedProducts)
 
+#This function gets the ip address of the clients computer
 def ipAddress():
     ip_add = ""
     if request.headers.getlist("X-Forwarded-For"):
@@ -453,36 +526,39 @@ def addToCart():
         foundProduct = False
         for data in result[1]:
             qty = data["qty"]
-            if ((data["p_id"] == int(product_id)) and (data["ip_add"]==ip_add)):
+            if ((data["p_id"] == int(product_id))
+                    and (data["ip_add"] == ip_add)):
                 foundProduct = True
                 #-50 is used to denote if a user wants to add to cart
-                print(action=="-50")
-                if action=="-50":
-                    qty = qty+1
+                print(action == "-50")
+                if action == "-50":
+                    qty = qty + 1
                     query = "UPDATE cart SET qty = %s where p_id= %s"
-                    insertQuery(query,(qty,data["p_id"]))
+                    insertQuery(query, (qty, data["p_id"]))
                 else:
-                    qty = qty-1
+                    qty = qty - 1
                     query = "UPDATE cart SET qty = %s where p_id= %s"
-                    insertQuery(query,(qty,data["p_id"]))
+                    insertQuery(query, (qty, data["p_id"]))
         if (foundProduct == False):
             query = "INSERT INTO cart (p_id, ip_add, qty) VALUES (%s,%s,%s)"
-            insertQuery(query,(product_id,ip_add,1))
-                
+            insertQuery(query, (product_id, ip_add, 1))
+
         deleteQuery("DELETE FROM cart WHERE qty = 0")
 
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM cart INNER JOIN products ON cart.p_id = products.product_id AND cart.ip_add = %s",[ip_add])
+    cur.execute(
+        "SELECT * FROM cart INNER JOIN products ON cart.p_id = products.product_id AND cart.ip_add = %s",
+        [ip_add])
     result2 = cur.fetchall()
     cur.close()
-	# return as JSON
-    return json.dumps({"results":result2}) 
+    # return as JSON
+    return json.dumps({"results": result2})
+
 
 @app.route("/viewcart")
 def viewCart():
     session['index'] = False
     return render_template("cart.html")
-
 
 #This is for rendering the checkout.html template
 @app.route('/checkout')
@@ -502,23 +578,24 @@ def success():
 
 
 
-
-
-#Displays cart at the top right hand corner, currently suspend because alternative method and more effective method discovered. 
+#Displays cart at the top right hand corner, currently suspend because alternative method and more effective method discovered.
 def displayCart():
     cur = mysql.connection.cursor()
-    stmt = cur.execute("SELECT DISTINCT * FROM cart, products where products.product_id = p_id")
+    stmt = cur.execute(
+        "SELECT DISTINCT * FROM cart, products where products.product_id = p_id"
+    )
     all_data = cur.fetchall()
     res = []
     q = 0
     p = 0
     for data in all_data:
-        res.append((data["product_title"],data["product_image"],data["product_price"],data["qty"]))
-        q = q + data["qty"];
+        res.append((data["product_title"], data["product_image"],
+                    data["product_price"], data["qty"]))
+        q = q + data["qty"]
         p = p + data["product_price"] * data["qty"]
     cur.close()
     return res, q, p
-    
+
 
 def getProducts(query):
     products = []
@@ -531,24 +608,154 @@ def getProducts(query):
         product_cat = data['cat_name']
         #product_brand = data['brand_name']
         product_title = data['product_title']
-        product_price= str(data['product_price'])
+        product_price = str(data['product_price'])
         product_desc = data['product_desc']
-        product_image= data['product_image']
+        product_image = data['product_image']
         product_desc = data['product_keywords']
         #print(product_image)
-        products.append(product_id+"#"+product_cat+"#"+product_title+"#"+product_price+"#"+product_desc+"#"+product_image+"#"+product_desc)
+        products.append(product_id + "#" + product_cat + "#" + product_title +
+                        "#" + product_price + "#" + product_desc + "#" +
+                        product_image + "#" + product_desc)
     return products
-        
-  
-    
-    
+
+
+def displayProducts(query):
+    products = []
+    #create cursor
+    cur = mysql.connection.cursor()
+    result = cur.execute(query)
+    all_data = cur.fetchall()
+    for data in all_data:
+        product_id = str(data['product_id'])
+        product_cat = data['cat_name']
+        product_brand = data['brand_name']
+        product_title = data['product_title']
+        product_price = str(data['product_price'])
+        product_desc = data['product_desc']
+        product_image = data['product_image']
+        product_key = data['product_keywords']
+        #print(product_image)
+        products.append(product_id + "#" + product_cat + "#" + product_title +
+                        "#" + product_price + "#" + product_desc + "#" +
+                        product_image + "#" + product_key + "#" +
+                        product_brand)
+    return products
+
+
+def displayCategory(query):
+    products = []
+    #create cursor
+    cur = mysql.connection.cursor()
+    result = cur.execute(query)
+    all_data = cur.fetchall()
+    for data in all_data:
+        category_id = str(data['cat_id'])
+        category_cat = data['cat_name']
+
+        products.append(category_id + "#" + category_cat)
+    return products
+
+
+def displayBrand(query):
+    products = []
+    #create cursor
+    cur = mysql.connection.cursor()
+    result = cur.execute(query)
+    all_data = cur.fetchall()
+    for data in all_data:
+        brand_id = str(data['brand_id'])
+        brand_name = data['brand_name']
+
+        products.append(brand_id + "#" + brand_name)
+    return products
+
+
+#Delete product
+@app.route("/delete/<string:id>", methods=["POST", "GET"])
+def delete_prod(id):
+    # productId = request.args.get('product_id')
+    # print(productId)
+    # product_id = request.args.get('product_id')  # get product id
+    # print(product_id)
+    try:
+
+        # Create cursor
+        cur = mysql.connection.cursor()
+
+        # Execute
+        cur.execute("DELETE FROM products WHERE product_id = %s", [id])
+
+        # print(request.form['p_id'])
+
+        # Commit to DB
+        mysql.connection.commit()
+
+        #Close connection
+        cur.close()
+
+        # flash('Product Deleted', 'success')
+        return redirect(url_for('product_mgt'))
+    except:
+        # cur.rollback()
+        msg = "Error occured"
+        cur.close()
+        print(msg)
+    return render_template("product_mgt.html")
+
+
+#Admin Edit product
+@app.route('/edit/<string:id>', methods=['GET', 'POST'])
+def edit_product(id):
+
+    # Create cursor
+    cur = mysql.connection.cursor()
+    # Execute
+    cur.execute(
+        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id INNER JOIN brands ON products.product_cat= brands.brand_id  WHERE product_id = %s",
+        [id])
+
+    # products = cur.fetchone()
+    # cur.close()
+
+    if request.method == "POST":
+        product_cat = request.form['category']
+        product_brand = request.form['brand']
+        product_title = request.form['title']
+        product_price = request.form['price']
+        product_desc = request.form['description']
+        image = request.form['fileUpload']
+        product_keywords = request.form['keywords']
+
+        # Create Cursor
+        cur = mysql.connection.cursor()
+
+        # Disable FK Constraint
+        "ALTER TABLE products NOCHECK CONSTRAINT products_ibfk_1"
+        # Execute
+        cur.execute(
+            "UPDATE products SET product_cat=%s, product_brand=%s,product_title=%s, product_price=%s,product_desc=%s,product_image=%s,product_keywords=%s WHERE product_id=%s",
+            (product_cat, product_brand, product_title, product_price,
+             product_desc, image, product_keywords, id))
+        # Commit to DB
+        mysql.connection.commit()
+
+        # Close connection
+        cur.close()
+
+        # flash('Article Updated', 'success')
+
+        return redirect(url_for('product_mgt'))
+    return render_template("product_mgt.html")
+
+
 #This is for rendering the template for admin
 @app.route('/admin')
 def index_admin():
     return renderf_template('index_admin.html')
 
+
 #This is for rendering the product_mgt.html template
-@app.route("/product_mgt", methods=["GET", "POST"])
+@app.route("/product_mgt", methods=["POST", "GET"])
 def product_mgt():
     if request.method == "POST":
         product_cat = request.form['category']
@@ -558,10 +765,10 @@ def product_mgt():
         product_desc = request.form['description']
         image = request.form['fileUpload']
         product_keywords = request.form['keywords']
-        
-        print(product_title)
-        print(product_price)
-        print(product_keywords)
+
+        # print(product_brand)
+        # print(product_cat)
+        # print(image)
 
         #Uploading image procedure
         # image = request.files['image']
@@ -570,8 +777,9 @@ def product_mgt():
         #     image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #     imagename = filename
         try:
+
             # prepare update query and data
-            query = 'INSERT INTO products (product_cat, product_brand,product_title, product_price,product_desc, image, product_keywords) VALUES (%s,%s,%s,%s,%s,%s,%s)'
+            query = 'INSERT INTO products (product_cat, product_brand,product_title, product_price,product_desc,product_image,product_keywords) VALUES (%s,%s,%s,%s,%s,%s,%s)'
             #use cursor
             cur = mysql.connection.cursor()
             #execute query
@@ -581,17 +789,19 @@ def product_mgt():
             #commit DB
 
             mysql.connection.commit()
-            msg = "added successfully"
-            #close connect
             cur.close()
-            return redirect(url_for('index_admin'))
+            msg = "added successfully"
+            print(msg)
+            #close connect
+
+            return redirect(url_for('product_mgt'))
         except:
             msg = "error occured"
             print(msg)
     return render_template("product_mgt.html")
 
 
-
-
 if __name__ == '__main__':
     app.run(debug=True)
+
+# all the type submit(add product, delete, update) are referring to product_mgt....casausing confusion which type submit to submit
