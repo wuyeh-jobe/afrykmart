@@ -8,10 +8,10 @@
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
 	<title>AfrykMart - Products you can trust!</title>
-    
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
-    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
-    
+
+	<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+	<link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
 	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet">
 
@@ -39,7 +39,7 @@
 		<![endif]-->
 
 </head>
-    
+
 
 <body onload="addToCart('-1','-1',0)">
 	<!-- HEADER -->
@@ -52,28 +52,53 @@
 				</div>
 				<div class="pull-right">
 					<ul class="header-top-links">
-						<li><a href="/">Store</a></li>
+						<li>
+							<a href="/">Store</a>
+						</li>
 						<li class="dropdown default-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i class="fa fa-caret-down"></i></a>
+							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG
+								<i class="fa fa-caret-down"></i>
+							</a>
 							<ul class="custom-menu">
-								<li><a href="#">English (ENG)</a></li>
-								<li><a href="#">Russian (Ru)</a></li>
-								<li><a href="#">French (FR)</a></li>
-								<li><a href="#">Spanish (Es)</a></li>
+								<li>
+									<a href="#">English (ENG)</a>
+								</li>
+								<li>
+									<a href="#">Russian (Ru)</a>
+								</li>
+								<li>
+									<a href="#">French (FR)</a>
+								</li>
+								<li>
+									<a href="#">Spanish (Es)</a>
+								</li>
 							</ul>
 						</li>
 						<li class="dropdown default-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">USD <i class="fa fa-caret-down"></i></a>
+							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">USD
+								<i class="fa fa-caret-down"></i>
+							</a>
 							<ul class="custom-menu">
-								<li><a href="#">USD ($)</a></li>
-								<li><a href="#">EUR (€)</a></li>
+								<li>
+									<a href="#">USD ($)</a>
+								</li>
+								<li>
+									<a href="#">EUR (€)</a>
+								</li>
 							</ul>
 						</li>
-                         {% if session.logged_in != NULL %}
-                        <li><strong class="text-uppercase"><a href="/"> Welcome {{session.name}}!</a></strong></li>
-                        {% else %}
-                        <li><a href="/login" class="">Login</a> /<a href="/signup" class="">Sign Up</a></li>
-                        {% endif %}
+						{% if session.logged_in != NULL %}
+						<li>
+							<strong class="text-uppercase">
+								<a href="/"> Welcome {{session.name}}!</a>
+							</strong>
+						</li>
+						{% else %}
+						<li>
+							<a href="/login" class="">Login</a> /
+							<a href="/signup" class="">Sign Up</a>
+						</li>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
@@ -101,14 +126,16 @@
 								<option value="1">Category 01</option>
 								<option value="1">Category 02</option>
 							</select>
-							<button class="search-btn"><i class="fa fa-search"></i></button>                            
-						</form>                        
+							<button class="search-btn">
+								<i class="fa fa-search"></i>
+							</button>
+						</form>
 					</div>
 					<!-- /Search -->
-                    <!-- shows search result -->
-                        <div style="margin-left: 75%" id="results"></div>
-                    <!-- shows search result -->
-                    
+					<!-- shows search result -->
+					<div style="margin-left: 75%" id="results"></div>
+					<!-- shows search result -->
+
 				</div>
 				<div class="pull-right">
 					<ul class="header-btns">
@@ -118,24 +145,42 @@
 								<div class="header-btns-icon">
 									<i class="fa fa-user-o"></i>
 								</div>
-								<strong class="text-uppercase">My Account <i class="fa fa-caret-down"></i></strong>
+								<strong class="text-uppercase">My Account
+									<i class="fa fa-caret-down"></i>
+								</strong>
 							</div>
-                            {% if session.logged_in == NULL %}
-							<a href="/login" class="text-uppercase">Login</a> /<a href="/signup" class="text-uppercase">Sign Up</a>
-                            {% else %}
-                                <a>{{session.name}}</a>
-                             {% endif %}
+							{% if session.logged_in == NULL %}
+							<a href="/login" class="text-uppercase">Login</a> /
+							<a href="/signup" class="text-uppercase">Sign Up</a>
+							{% else %}
+							<a>{{session.name}}</a>
+							{% endif %}
 							<ul class="custom-menu">
-								<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
-								<li><a href="/checkout"><i class="fa fa-check"></i> Checkout</a></li>
-                                {% if session.logged_in != NULL %}
-                                <li><a href="/logout"><i class="fa fa-unlock-alt"></i> Logout</a></li>
-                                {% else %}
-                                <li><a href="/login"><i class="fa fa-unlock-alt"></i> Login</a></li>
-                                <li><a href="/signup"><i class="fa fa-user-plus"></i> Create An Account</a></li>
-                                {% endif %}
-								
-                                
+								<li>
+									<a href="#">
+										<i class="fa fa-user-o"></i> My Account</a>
+								</li>
+								<li>
+									<a href="/checkout">
+										<i class="fa fa-check"></i> Checkout</a>
+								</li>
+								{% if session.logged_in != NULL %}
+								<li>
+									<a href="/logout">
+										<i class="fa fa-unlock-alt"></i> Logout</a>
+								</li>
+								{% else %}
+								<li>
+									<a href="/login">
+										<i class="fa fa-unlock-alt"></i> Login</a>
+								</li>
+								<li>
+									<a href="/signup">
+										<i class="fa fa-user-plus"></i> Create An Account</a>
+								</li>
+								{% endif %}
+
+
 							</ul>
 						</li>
 						<!-- /Account -->
@@ -154,15 +199,37 @@
 							<div class="custom-menu">
 								<div id="shopping-cart">
 									<div class="shopping-cart-list" id="shopping-cart-list">
-                                        {% for data in cart%}
-                                            <div class="product product-widget"> <div class="product-thumb">  <img src="{{ url_for('static', **{'filename' : 'img/'+ data[1] } ) }}" alt=""></div><div class="product-body"><h3 class="product-price"> ${{data[2]}}<span class="qty"> x ' {{data[3]}} </span></h3><h2 class="product-name"><a href="#">{{ data[0] }}</a></h2></div><button class="cancel-btn"><i class="fa fa-minus"></i></i></button></div>  
-                                        {% endfor %}
-										
-                                        
+										{% for data in cart%}
+										<div class="product product-widget">
+											<div class="product-thumb">
+												<img src="{{ url_for('static', **{'filename' : 'img/'+ data[1] } ) }}" alt="">
+											</div>
+											<div class="product-body">
+												<h3 class="product-price"> ${{data[2]}}
+													<span class="qty"> x ' {{data[3]}} </span>
+												</h3>
+												<h2 class="product-name">
+													<a href="#">{{ data[0] }}</a>
+												</h2>
+											</div>
+											<button class="cancel-btn">
+												<i class="fa fa-minus"></i>
+												</i>
+											</button>
+										</div>
+										{% endfor %}
+
+
 									</div>
 									<div class="shopping-cart-btns">
-                                        <a href="/viewcart"><button class="main-btn">View Cart</button></a>
-										<a href="/checkout"><button  class="primary-btn"> Checkout <i class="fa fa-arrow-circle-right"></i></button></a>
+										<a href="/viewcart">
+											<button class="main-btn">View Cart</button>
+										</a>
+										<a href="/checkout">
+											<button class="primary-btn"> Checkout
+												<i class="fa fa-arrow-circle-right"></i>
+											</button>
+										</a>
 									</div>
 								</div>
 							</div>
@@ -171,7 +238,9 @@
 
 						<!-- Mobile nav toggle-->
 						<li class="nav-toggle">
-							<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-bars"></i></button>
+							<button class="nav-toggle-btn main-btn icon-btn">
+								<i class="fa fa-bars"></i>
+							</button>
 						</li>
 						<!-- / Mobile nav toggle -->
 					</ul>
@@ -182,7 +251,7 @@
 		<!-- container -->
 	</header>
 	<!-- /HEADER -->
-    
+
 
 	<!-- NAVIGATION -->
 	<div id="navigation">
@@ -191,6 +260,7 @@
 			<div id="responsive-nav">
 				<!-- category nav, if condition is for using correct nav style for each page. 
                     On index page category page should be shown always. On other pages, "CATEGORIES" has to be clicked -->
+<<<<<<< HEAD
                 {% if session.index == True %}
                     <div class="category-nav">
                 {% else %}
@@ -198,142 +268,16 @@
                 {% endif %}
 					<span class="category-header">Categories <i class="fa fa-list"></i></span>
 					<ul class="category-list">
-						<li class="dropdown side-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Afryk Print Clothes <i class="fa fa-angle-right"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Men</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Women</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">Authentic Products</h2>
-												<h3 class="white-color font-weak">HOT DEALS</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li><a href="#">Afryk Toiletry</a></li>
-						<li><a href="#">Afryk Bracelets</a></li>
-						<li><a href="#">Afryk Sourvinirs</a></li>
-						<li><a href="#">Afryk Innerwear</a></li>
-						<li><a href="#">West-African Collection</a></li>
-						<li><a href="#">Southern-African Collection </a></li>
-						<li><a href="#">Northern-African Collection</a></li>
-                        <li class="dropdown side-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Afryk Footwear <i class="fa fa-angle-right"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Men</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Women</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">Authentic Products</h2>
-												<h3 class="white-color font-weak">HOT DEALS</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
-                        <li class="dropdown side-dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Afryk Jewellery <i class="fa fa-angle-right"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Men</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Women</h3></li>
-											<li><a href="#">The Besy</a></li>
-											<li><a href="#">Hahaha </a></li>
-											<li><a href="#">You have to try</a></li>
-											<li><a href="#">Oh ho</a></li>
-											<li><a href="#">Greats</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">Authentic Products</h2>
-												<h3 class="white-color font-weak">HOT DEALS</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
+						
+						<li><a href="/viewproducts/1">Afryk Toiletry</a></li>
+						<li><a href="/viewproducts/2">Afryk Print Clothes</a></li>
+						<li><a href="/viewproducts/3">Afryk Footwear</a></li>
+						<li><a href="/viewproducts/4">Afryk Jewellery</a></li>
+						<li><a href="/viewproducts/5">Men</a></li>
+						<li><a href="/viewproducts/6">Women</a></li>
+						<li><a href="/viewproducts/7">West-African Collection </a></li>
+						<li><a href="/viewproducts/8">East-African Collection</a></li>
+						<li><a href="/viewproducts/9">African Souvenirs</a></li>
 						
 					</ul>
 				</div>
@@ -345,72 +289,158 @@
 					<ul class="menu-list">
 						<li><a href="/">Home</a></li>
 						<li><a href="/products">Shop</a></li>
-						<li class="dropdown mega-dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Women <i class="fa fa-caret-down"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Categories</h3></li>
-											<li><a href="#">Women’s Clothing</a></li>
-											<li><a href="#">Women’s Footwear</a></li>
-											<li><a href="#">Women’s Jewelleries</a></li>
-                                            <li><a href="#">Women’s Toiletries</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">NEW COLLECTION</h2>
-												<h3 class="white-color font-weak">HOT DEAL</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
-					   <li class="dropdown mega-dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Men <i class="fa fa-caret-down"></i></a>
-							<div class="custom-menu">
-								<div class="row">
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Categories</h3></li>
-											<li><a href="#">Men’s Clothing</a></li>
-											<li><a href="#">Men’s Footwear</a></li>
-											<li><a href="#">Men’s Jewelleries</a></li>
-                                            <li><a href="#">Men’s Toiletries</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">NEW COLLECTION</h2>
-												<h3 class="white-color font-weak">HOT DEAL</h3>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li><a href="#">Sales</a></li>
+						<li ><a href="/viewproducts/6">Women </a></li>
+					    <li><a href="/viewproducts/5">Men </a></li>
 					</ul>
+=======
+				{% if session.index == True %}
+				<div class="category-nav">
+					{% else %}
+					<div class="category-nav show-on-click">
+						{% endif %}
+						<span class="category-header">Categories
+							<i class="fa fa-list"></i>
+						</span>
+						<ul class="category-list">
+
+
+							<li>
+								<a href="/viewproducts/1">Afryk Toiletry</a>
+							</li>
+							<li>
+								<a href="/viewproducts/2">Afryk Print Clothes</a>
+							</li>
+							<li>
+								<a href="/viewproducts/3">Afryk Footwear</a>
+							</li>
+							<li>
+								<a href="/viewproducts/4">Afryk Jewellery</a>
+							</li>
+							<li>
+								<a href="/viewproducts/5">Men</a>
+							</li>
+							<li>
+								<a href="/viewproducts/6">Women</a>
+							</li>
+							<li>
+								<a href="/viewproducts/7">West-African Collection </a>
+							</li>
+							<li>
+								<a href="/viewproducts/8">East-African Collection</a>
+							</li>
+							<li>
+								<a href="/viewproducts/9">African Souvenirs</a>
+							</li>
+
+						</ul>
+					</div>
+					<!-- /category nav -->
+
+					<!-- menu nav -->
+					<div class="menu-nav">
+						<span class="menu-header">Menu
+							<i class="fa fa-bars"></i>
+						</span>
+						<ul class="menu-list">
+							<li>
+								<a href="/">Home</a>
+							</li>
+							<li>
+								<a href="/products">Shop</a>
+							</li>
+							<li class="dropdown mega-dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Women
+									<i class="fa fa-caret-down"></i>
+								</a>
+								<div class="custom-menu">
+									<div class="row">
+										<div class="col-md-4">
+											<ul class="list-links">
+												<li>
+													<h3 class="list-links-title">Categories</h3>
+												</li>
+												<li>
+													<a href="#">Women’s Clothing</a>
+												</li>
+												<li>
+													<a href="#">Women’s Footwear</a>
+												</li>
+												<li>
+													<a href="#">Women’s Jewelleries</a>
+												</li>
+												<li>
+													<a href="#">Women’s Toiletries</a>
+												</li>
+											</ul>
+											<hr class="hidden-md hidden-lg">
+										</div>
+
+									</div>
+									<div class="row hidden-sm hidden-xs">
+										<div class="col-md-12">
+											<hr>
+											<a class="banner banner-1" href="#">
+												<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
+												<div class="banner-caption text-center">
+													<h2 class="white-color">NEW COLLECTION</h2>
+													<h3 class="white-color font-weak">HOT DEAL</h3>
+												</div>
+											</a>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="dropdown mega-dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Men
+									<i class="fa fa-caret-down"></i>
+								</a>
+								<div class="custom-menu">
+									<div class="row">
+										<div class="col-md-4">
+											<ul class="list-links">
+												<li>
+													<h3 class="list-links-title">Categories</h3>
+												</li>
+												<li>
+													<a href="#">Men’s Clothing</a>
+												</li>
+												<li>
+													<a href="#">Men’s Footwear</a>
+												</li>
+												<li>
+													<a href="#">Men’s Jewelleries</a>
+												</li>
+												<li>
+													<a href="#">Men’s Toiletries</a>
+												</li>
+											</ul>
+											<hr class="hidden-md hidden-lg">
+										</div>
+
+									</div>
+									<div class="row hidden-sm hidden-xs">
+										<div class="col-md-12">
+											<hr>
+											<a class="banner banner-1" href="#">
+												<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
+												<div class="banner-caption text-center">
+													<h2 class="white-color">NEW COLLECTION</h2>
+													<h3 class="white-color font-weak">HOT DEAL</h3>
+												</div>
+											</a>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<a href="#">Sales</a>
+							</li>
+						</ul>
+					</div>
+					<!-- menu nav -->
+>>>>>>> bacac56926fb2d5002a8357b7a293e9eaca9ec96
 				</div>
-				<!-- menu nav -->
 			</div>
+			<!-- /container -->
 		</div>
-		<!-- /container -->
-	</div>
-	<!-- /NAVIGATION -->
+		<!-- /NAVIGATION -->
