@@ -75,13 +75,6 @@ def index():
     allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id")
     return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts)
 
-
-
-
-<<<<<<< HEAD
-
-=======
->>>>>>> bacac56926fb2d5002a8357b7a293e9eaca9ec96
 @app.route('/ipn/',methods=['POST'])
 def ipn():
     try:
