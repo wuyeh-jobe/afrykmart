@@ -128,12 +128,12 @@
                    document.getElementById('email').value == "" ||
                    document.getElementById('password').value == "" ||
                   document.getElementById('confirmPassword').value == ""){
-                    alert("None of the fields should be empty");
+                  	swal({text: "None of the fields should be empty", icon: "warning", timer: 5000});
                     return false;
                 }
 
                 if(document.getElementById('password').value != document.getElementById('confirmPassword').value){
-                    alert("Passwords do not match!");
+                	swal({text: "Passwords do not match!", icon: "warning", timer: 5000});
                     return false;
                 }
 
@@ -198,7 +198,7 @@
 				}
                 
             }
-            
+
             
     </script>
 	<!-- jQuery Plugins -->

@@ -7,7 +7,6 @@ from functools import wraps
 from flask import request
 import datetime
 import json
-
 from werkzeug.utils import secure_filename
 import os
 
@@ -20,9 +19,10 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'afrykmart'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'png', 'gif'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# UPLOAD_FOLDER = os.path.basename('static/img')
+# ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'png', 'gif'])
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app_root = os.path.dirname(os.path.abspath(__file__))
 
 #init MYSQL
 mysql = MySQL(app)
@@ -134,32 +134,67 @@ def ipn():
 def products():
     session['index'] = False
     allProducts = getProducts(
-        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id ORDER BY RAND()"
+        "SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_brand= brands.brand_id ORDER BY RAND()"
     )
     return render_template("products.html", ap=allProducts)
 
 
 #This is for rendering the admin_products.html template
-@app.route('/product_mgt')
+@app.route('/product_mgt', methods=["POST","GET"])
 def admin_products():
     session['index'] = False
     allProducts = displayProducts(
-        "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id INNER JOIN brands ON products.product_cat= brands.brand_id"
+        "SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_brand= brands.brand_id"
     )
     categories = displayCategory("SELECT * FROM categories")
     brands = displayBrand("SELECT * FROM brands")
+    if request.method == "POST":
+        product_cat = request.form['category']
+        product_brand = request.form['brand']
+        product_title = request.form['title']
+        product_price = request.form['price']
+        product_desc = request.form['description']
+        product_keywords = request.form['keywords']
+        file = request.files['fileUpload']
+        image = file.filename
+        target = os.path.join(app_root, 'static/img/')
+        destination = '/'.join([target, image])
+        #f = os.path.join(app.config['UPLOAD_FOLDER'], image)
+        file.save(destination)
+        try:
+
+            # prepare update query and data
+            query = 'INSERT INTO products (product_cat, product_brand,product_title, product_price,product_desc,product_image,product_keywords) VALUES (%s,%s,%s,%s,%s,%s,%s)'
+            #use cursor
+            cur = mysql.connection.cursor()
+            #execute query
+            cur.execute(query,
+                        (product_cat, product_brand, product_title,
+                         product_price, product_desc, image, product_keywords))
+            #commit DB
+
+            mysql.connection.commit()
+            cur.close()
+            msg = "added successfully"
+            print(msg)
+            #close connect
+
+            return redirect(url_for('admin_products'))
+        except:
+            msg = "error occured"
+            print(msg)
     return render_template(
         "product_mgt.html", ap=allProducts, ca=categories, brand=brands)
 
 
-#This is for rendering the categories in a dropdown
-@app.route('/category')
-def category_products():
-    session['index'] = False
-    allCategories = displayCategory(
-        "SELECT * FROM categories INNER JOIN categories ON products.product_id = categories.cat_id"
-    )
-    return render_template("product_mgt.html", items=allCategories)
+# #This is for rendering the categories in a dropdown
+# @app.route('/category')
+# def category_products():
+#     session['index'] = False
+#     allCategories = displayCategory(
+#         "SELECT * FROM categories INNER JOIN categories ON products.product_id = categories.cat_id"
+#     )
+#     return render_template("product_mgt.html", items=allCategories)
 
 
 
@@ -679,34 +714,29 @@ def displayBrand(query):
 #Delete product
 @app.route("/delete/<string:id>", methods=["POST", "GET"])
 def delete_prod(id):
-    # productId = request.args.get('product_id')
-    # print(productId)
-    # product_id = request.args.get('product_id')  # get product id
-    # print(product_id)
+    # Create cursor
+    cur = mysql.connection.cursor()
+    result = cur.execute("SELECT * FROM products where product_id = %s",
+        [id])
     try:
-
-        # Create cursor
-        cur = mysql.connection.cursor()
+        target = os.path.join(app_root, 'static/img/')
+        data = cur.fetchone() #get image name from database
+        fileToRemove = '/'.join([target, data["product_image"]])
+        os.remove(fileToRemove)
 
         # Execute
         cur.execute("DELETE FROM products WHERE product_id = %s", [id])
-
-        # print(request.form['p_id'])
-
         # Commit to DB
         mysql.connection.commit()
-
         #Close connection
         cur.close()
-
-        # flash('Product Deleted', 'success')
-        return redirect(url_for('product_mgt'))
+        flash('Product Deleted', 'success')
+        return redirect(url_for('admin_products'))
     except:
         # cur.rollback()
         msg = "Error occured"
         cur.close()
         print(msg)
-    return render_template("product_mgt.html")
 
 
 #Admin Edit product
@@ -716,32 +746,37 @@ def edit_product(id):
     # Create cursor
     cur = mysql.connection.cursor()
     # Execute
-    cur.execute(
+    result = cur.execute(
         "SELECT * FROM products INNER JOIN categories ON products.product_id = categories.cat_id INNER JOIN brands ON products.product_cat= brands.brand_id  WHERE product_id = %s",
         [id])
-
-    # products = cur.fetchone()
-    # cur.close()
-
     if request.method == "POST":
         product_cat = request.form['category']
         product_brand = request.form['brand']
         product_title = request.form['title']
         product_price = request.form['price']
         product_desc = request.form['description']
-        image = request.form['fileUpload']
         product_keywords = request.form['keywords']
-
-        # Create Cursor
-        cur = mysql.connection.cursor()
-
-        # Disable FK Constraint
-        "ALTER TABLE products NOCHECK CONSTRAINT products_ibfk_1"
-        # Execute
-        cur.execute(
+        try:
+            file = request.files['fileUpload']
+            image = file.filename
+            target = os.path.join(app_root, 'static/img/')
+            destination = '/'.join([target, image])
+            file.save(destination)
+            data = cur.fetchone() #get image name from database
+            fileToRemove = '/'.join([target, data["product_image"]])
+            os.remove(fileToRemove)
+            cur.execute(
             "UPDATE products SET product_cat=%s, product_brand=%s,product_title=%s, product_price=%s,product_desc=%s,product_image=%s,product_keywords=%s WHERE product_id=%s",
             (product_cat, product_brand, product_title, product_price,
              product_desc, image, product_keywords, id))
+            
+        except:
+            cur.execute(
+            "UPDATE products SET product_cat=%s, product_brand=%s,product_title=%s, product_price=%s,product_desc=%s,product_keywords=%s WHERE product_id=%s",
+            (product_cat, product_brand, product_title, product_price,
+             product_desc, product_keywords, id))
+            print("Image not updated")
+       
         # Commit to DB
         mysql.connection.commit()
 
@@ -750,61 +785,16 @@ def edit_product(id):
 
         # flash('Article Updated', 'success')
 
-        return redirect(url_for('product_mgt'))
-    return render_template("product_mgt.html")
+        return redirect(url_for('admin_products'))
 
 
 #This is for rendering the template for admin
 @app.route('/admin')
 def index_admin():
-    return renderf_template('index_admin.html')
+    return render_template('index_admin.html')
 
 
-#This is for rendering the product_mgt.html template
-@app.route("/product_mgt", methods=["POST", "GET"])
-def product_mgt():
-    if request.method == "POST":
-        product_cat = request.form['category']
-        product_brand = request.form['brand']
-        product_title = request.form['title']
-        product_price = request.form['price']
-        product_desc = request.form['description']
-        image = request.form['fileUpload']
-        product_keywords = request.form['keywords']
 
-        # print(product_brand)
-        # print(product_cat)
-        # print(image)
-
-        #Uploading image procedure
-        # image = request.files['image']
-        # if image and allowed_file(image.filename):
-        #     filename = secure_filename(image.filename)
-        #     image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        #     imagename = filename
-        try:
-
-            # prepare update query and data
-            query = 'INSERT INTO products (product_cat, product_brand,product_title, product_price,product_desc,product_image,product_keywords) VALUES (%s,%s,%s,%s,%s,%s,%s)'
-            #use cursor
-            cur = mysql.connection.cursor()
-            #execute query
-            cur.execute(query,
-                        (product_cat, product_brand, product_title,
-                         product_price, product_desc, image, product_keywords))
-            #commit DB
-
-            mysql.connection.commit()
-            cur.close()
-            msg = "added successfully"
-            print(msg)
-            #close connect
-
-            return redirect(url_for('product_mgt'))
-        except:
-            msg = "error occured"
-            print(msg)
-    return render_template("product_mgt.html")
 
 
 if __name__ == '__main__':
