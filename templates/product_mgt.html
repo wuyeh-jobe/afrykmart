@@ -12,6 +12,7 @@
         </div>
         <!-- end  page header -->
     </div>
+       {% include 'includes/_messages.html' %}
     <div class="row">
         <div class="col-lg-12">
             <!-- Advanced Tables -->
@@ -49,13 +50,12 @@
                                     <td>{{product.split('#')[2]}}</td>
                                     <td>{{product.split('#')[3]}}</td>
                                     <td>{{product.split('#')[4]}}</td>
-                                    <td>{{product.split('#')[5]}}</td>
+                                    <td><img style="width:50px;height:50px" src="{{ url_for('static', **{'filename' : 'img/'+product.split('#')[5] } ) }}" alt=""></td>
                                     <td>{{product.split('#')[6]}}</td>
                                     <td>{{product.split('#')[7]}}</td>
 
-                                    <td>
-                                        <button class="btn btn-info" data-toggle="modal" data-target="#{{product.split('#')[0]}}">Update</button>
-                                        <button class="btn btn-danger" data-toggle="modal" data-target="#{{product.split('#')[0]}}1">Delete</button>
+                                    <td><a href="#" data-toggle="modal" data-target="#{{product.split('#')[0]}}"> <i class="fa fa-pencil-square-o"> Update |</i></a>
+                                         <a href="#" data-toggle="modal" data-target="#{{product.split('#')[0]}}1"> <i class="fa fa-trash-o"> Delete </i></a>                                        
                                     </td>
                                 </tr>
 
@@ -100,7 +100,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="POST" action="/edit/{{product.split('#')[0]}}">
+                                                <form method="POST" onsubmit="return validate2()" action="/edit/{{product.split('#')[0]}}" enctype="multipart/form-data">
                                                     <div class="form-group">
                                                         <label for="product-name" class="col-form-label">Product Name:</label>
                                                         <input type="text" class="form-control" id="title" name="title" value="{{product.split('#')[2]}}">
@@ -108,10 +108,13 @@
                                                     <div class="form-group">
                                                         <label for="product-cat" class="col-form-label">Product Category:</label>
                                                         <br>
-                                                        <select id="thecategory" name="category" style="width:360px;height:40px; margin-left:-4px">
-                                                            {% for item in ca %}
-                                                            <!-- <option value="Select Category" size="25">Select Category</option> -->
+                                                        <select id="category" name="category" style="width:360px;height:40px; margin-left:-4px">                                
+                                                            {% for item in ca %}    
+                                                            {% if item.split('#')[1] == product.split('#')[1]%}                                                        
+                                                            <option value="{{item.split('#')[0]}}" selected>{{item.split('#')[1]}}</option>
+                                                            {% else %}
                                                             <option value="{{item.split('#')[0]}}">{{item.split('#')[1]}}</option>
+                                                            {% endif %}
                                                             {% endfor %}
                                                         </select>
                                                         <!-- <input type="text" class="form-control" id="category" name="category" value="{{product.split('#')[1]}}"> -->
@@ -119,16 +122,20 @@
                                                     <div class="form-group">
                                                         <label for="product-price" class="col-form-label">Product Brand:</label>
                                                         <br>
-                                                        <select id="thecategory" name="brand" style="width:360px;height:40px; margin-left:-4px">
+                                                        <select id="brand" name="brand" style="width:360px;height:40px; margin-left:-4px">
                                                             {% for brand in brand %}
+                                                             {% if brand.split('#')[1] == product.split('#')[7]%}  
                                                             <!-- <option value="Select Category" size="25">Select Category</option> -->
+                                                            <option value="{{brand.split('#')[0]}}" selected>{{brand.split('#')[1]}}</option>
+                                                            {% else%}
                                                             <option value="{{brand.split('#')[0]}}">{{brand.split('#')[1]}}</option>
+                                                            {% endif %}
                                                             {% endfor %}
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="product-price" class="col-form-label" max="1">Product price:</label>
-                                                        <input type="text" class="form-control" id="price" name="price" value="{{product.split('#')[3]}}">
+                                                        <input type="number" class="form-control" id="price" name="price" min="0" value="{{product.split('#')[3]}}">
                                                     </div>
                                                     <!-- <div class="form-group">
                                                         <label for="product-quantity" class="col-form-label">Product Quantity:</label>
@@ -144,8 +151,9 @@
                                                     </div>
                                                     <input type="hidden" class="form-control" id="p_id" name="p_id" value="{{product.split('#')[7]}}">
                                                     <div class="form-group">
-                                                        <label for="file Upload" class="col-form-label">File Upload:</label>
-                                                        <input type="file" class="form-control" id="fileUpload" name="fileUpload" value="{{product.split('#')[5]}}">
+                                                        <label for="file Upload" class="col-form-label">File Upload:</label><br>
+                                                        <img style="width:35%; height:35%; text-align:center" id="preview" src="{{ url_for('static', **{'filename' : 'img/'+product.split('#')[5] } ) }}" alt="your image" />
+                                                        <input type="file" class="form-control" id="fileUpload1" name="fileUpload" accept="image/*"  onchange="document.getElementById('preview').src = window.URL.createObjectURL(this.files[0])">
                                                     </div>
                                                     <button type="submit" name="submit" class="btn btn-primary" value="Add Product">Update Product</button>
                                                 </form>
@@ -182,7 +190,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="">
+                <form method="post" onsubmit="return validate()" action="/product_mgt"  enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="product-name" class="col-form-label">Product Name:</label>
                         <input type="text" class="form-control" id="title" name="title">
@@ -190,7 +198,8 @@
                     <div class="form-group">
                         <label for="product-cat" class="col-form-label">Product Category:</label>
                         <br>
-                        <select id="thecategory" name="category" style="width:360px;height:40px; margin-left:-4px">
+                        <select id="category" name="category" style="width:360px;height:40px; margin-left:-4px">
+                            <option value="Select Category" size="25">Select Category</option>
                             {% for item in ca %}
                             <!-- <option value="Select Category" size="25">Select Category</option> -->
                             <option value="{{item.split('#')[0]}}">{{item.split('#')[1]}}</option>
@@ -200,7 +209,8 @@
                     <div class="form-group">
                         <label for="product-price" class="col-form-label">Product Brand:</label>
                         <br>
-                        <select id="thecategory" name="brand" style="width:360px;height:40px; margin-left:-4px">
+                        <select id="brand" name="brand" style="width:360px;height:40px; margin-left:-4px">
+                            <option value="Select Brand" size="25">Select Brand</option>
                             {% for brand in brand %}
                             <!-- <option value="Select Category" size="25">Select Category</option> -->
                             <option value="{{brand.split('#')[0]}}">{{brand.split('#')[1]}}</option>
@@ -208,8 +218,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="product-price" class="col-form-label" max="1">Product price:</label>
-                        <input type="text" class="form-control" id="price" name="price">
+                        <label for="product-price" class="col-form-label" min="1">Product price:</label>
+                        <input type="number" class="form-control" id="price" min="0" name="price">
                     </div>
                     <!-- <div class="form-group">
                         <label for="product-quantity" class="col-form-label">Product Quantity:</label>
@@ -224,8 +234,9 @@
                         <input type="text" class="form-control" id="keywords" name="keywords">
                     </div>
                     <div class="form-group">
-                        <label for="file Upload" class="col-form-label">File Upload:</label>
-                        <input type="file" class="form-control" id="fileUpload" name="fileUpload">
+                        <label for="file Upload" class="col-form-label">File Upload:</label><br>
+                        <img style="width:35%; height:35%; text-align:center" id="preview2" src="#" alt="your image" />
+                        <input type="file" class="form-control" id="fileUpload" name="fileUpload" accept="image/*"  onchange="document.getElementById('preview2').src = window.URL.createObjectURL(this.files[0])">
                     </div>
                     <button name="submit" class="btn btn-primary" value="Add Product" type="submit">Add Product</button>
                 </form>
@@ -236,34 +247,39 @@
         </div>
     </div>
 </div>
-
 <!-- End of modal box for adding product -->
 
-<!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 </div>
 <!-- end wrapper -->
 
 <!-- Core Scripts - Include with every page -->
+<script>
+    function validate(){
+        if( document.getElementById("fileUpload").files.length == 0 ){
+            swal("Image Field Empty","No Imagefile selected","warning",{timer: 3000});
+            return false;
+        }
+        else if (document.getElementById("title").value=="" || document.getElementById("category").value=="Select Category" || document.getElementById("brand").value=="Select Brand" || document.getElementById("price").value=="" || document.getElementById("description").value=="" || document.getElementById("keywords").value=="") {
+            swal("Empty Field","None of the fields should be empty","warning",{timer: 3000});
+            return false;
+        }
+    }
+
+    function validate2(){
+            console.log("Hello")
+            console.log(document.getElementById("title").value=="");
+             console.log(document.getElementById("category").value=="Select Category")
+             console.log(document.getElementById("brand").value)
+             console.log(document.getElementById("price").value)
+             console.log(document.getElementById("description").value)
+             console.log(document.getElementById("keywords").value)
+        if (document.getElementById("title").value=="" || document.getElementById("category").value=="Select Category" || document.getElementById("brand").value=="Select Brand" || document.getElementById("price").value=="" || document.getElementById("description").value=="" || document.getElementById("keywords").value=="") {
+            swal("Empty Field","None of the fields should be empty","warning",{timer: 3000});
+            return false;
+        }
+    }
+</script>
 <script src="{{ url_for('static', filename= 'assets/plugins/jquery-1.10.2.js') }}"></script>
 <script src="{{ url_for('static', filename= 'assets/plugins/bootstrap/bootstrap.min.js') }}"></script>
 <script src="{{ url_for('static', filename= 'assets/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -277,6 +293,7 @@
         $('#dataTables-example').dataTable();
     });
 </script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </body>
 

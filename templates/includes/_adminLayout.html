@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,8 @@
     <link href="{{ url_for('static', filename= 'assets/css/main-style.css') }}" rel="stylesheet" />
     <!-- Page-Level CSS -->
     <link href="{{ url_for('static', filename= 'assets/plugins/morris/morris-0.4.3.min.css') }}" rel="stylesheet" />
-   </head>
+</head>
+
 <body>
     <!--  wrapper -->
     <div id="wrapper">
@@ -36,14 +38,17 @@
                 <!-- main dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span class="top-label label label-danger">3</span><i class="fa fa-envelope fa-3x"></i>
+                        <span class="top-label label label-danger">3</span>
+                        <i class="fa fa-envelope fa-3x"></i>
                     </a>
                     <!-- dropdown-messages -->
                     <ul class="dropdown-menu dropdown-messages">
                         <li>
                             <a href="#">
                                 <div>
-                                    <strong><span class=" label label-danger">Andrew Smith</span></strong>
+                                    <strong>
+                                        <span class=" label label-danger">Andrew Smith</span>
+                                    </strong>
                                     <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
@@ -55,7 +60,9 @@
                         <li>
                             <a href="#">
                                 <div>
-                                    <strong><span class=" label label-info">Jonney Depp</span></strong>
+                                    <strong>
+                                        <span class=" label label-info">Jonney Depp</span>
+                                    </strong>
                                     <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
@@ -67,7 +74,9 @@
                         <li>
                             <a href="#">
                                 <div>
-                                    <strong><span class=" label label-success">Jonney Depp</span></strong>
+                                    <strong>
+                                        <span class=" label label-success">Jonney Depp</span>
+                                    </strong>
                                     <span class="pull-right text-muted">
                                         <em>Yesterday</em>
                                     </span>
@@ -93,12 +102,18 @@
                     </a>
                     <!-- dropdown user-->
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i>User Profile</a>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-user fa-fw"></i>User Profile</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>Settings</a>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-gear fa-fw"></i>Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="/admin_logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
+                        <li>
+                            <a href="/admin_login">
+                                <i class="fa fa-sign-out fa-fw"></i>Logout</a>
                         </li>
                     </ul>
                     <!-- end dropdown-user -->
@@ -123,7 +138,9 @@
                                 <img src="{{ url_for('static', filename= 'assets/img/user.jpg') }}" alt="">
                             </div>
                             <div class="user-info">
-                                <div>Jonny <strong>Deen</strong></div>
+                                <div>Jonny
+                                    <strong>Deen</strong>
+                                </div>
                                 <div class="user-text-online">
                                     <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
                                 </div>
@@ -144,16 +161,20 @@
                         <!--end search section-->
                     </li>
                     <li>
-                        <a href="/admin"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                        <a href="/admin">
+                            <i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
                     </li>
                     <li>
-                        <a href="/orders"><i class="fa fa-table fa-fw"></i>Orders</a>
+                        <a href="/orders">
+                            <i class="fa fa-table fa-fw"></i>Orders</a>
                     </li>
                     <li>
-                        <a href="/product_mgt"><i class="fa fa-edit fa-fw"></i>Product Management</a>
+                        <a href="/product_mgt">
+                            <i class="fa fa-edit fa-fw"></i>Product Management</a>
                     </li>
                     <li>
-                        <a href="/users_details"><i class="fa fa-edit fa-fw"></i>User Details</a>
+                        <a href="/users_details">
+                            <i class="fa fa-edit fa-fw"></i>User Details</a>
                     </li>
                 </ul>
                 <!-- end side-menu -->
@@ -161,8 +182,3 @@
             <!-- end sidebar-collapse -->
         </nav>
         <!-- end navbar side -->
-        
-        {% include 'includes/_messages.html' %}
-        
-        
-        

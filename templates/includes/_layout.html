@@ -55,7 +55,7 @@
 						<li>
 							<a href="/">Store</a>
 						</li>
-						<li class="dropdown default-dropdown">
+						<!--<li class="dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG
 								<i class="fa fa-caret-down"></i>
 							</a>
@@ -86,7 +86,7 @@
 									<a href="#">EUR (€)</a>
 								</li>
 							</ul>
-						</li>
+						</li> -->
 						{% if session.logged_in != NULL %}
 						<li>
 							<strong class="text-uppercase">
@@ -120,12 +120,15 @@
 					<!-- Search -->
 					<div class="header-search">
 						<form>
+							
 							<input class="input search-input" onkeyup="liveSearch(this.value)" type="text" placeholder="Enter your keyword">
-							<select class="input search-categories">
+							
+							<!--<select class="input search-categories">
 								<option value="0">All Categories</option>
+								<option value="">sth</option>
 								<option value="1">Category 01</option>
 								<option value="1">Category 02</option>
-							</select>
+							</select>-->
 							<button class="search-btn">
 								<i class="fa fa-search"></i>
 							</button>
@@ -150,7 +153,7 @@
 								</strong>
 							</div>
 							{% if session.logged_in == NULL %}
-							<a href="/login" class="text-uppercase">Login</a> /
+							<a href="/login" class="text-uppercase">Login</a>/
 							<a href="/signup" class="text-uppercase">Sign Up</a>
 							{% else %}
 							<a>{{session.name}}</a>
@@ -260,7 +263,6 @@
 			<div id="responsive-nav">
 				<!-- category nav, if condition is for using correct nav style for each page. 
                     On index page category page should be shown always. On other pages, "CATEGORIES" has to be clicked -->
-<<<<<<< HEAD
                 {% if session.index == True %}
                     <div class="category-nav">
                 {% else %}
@@ -292,155 +294,12 @@
 						<li ><a href="/viewproducts/6">Women </a></li>
 					    <li><a href="/viewproducts/5">Men </a></li>
 					</ul>
-=======
-				{% if session.index == True %}
-				<div class="category-nav">
-					{% else %}
-					<div class="category-nav show-on-click">
-						{% endif %}
-						<span class="category-header">Categories
-							<i class="fa fa-list"></i>
-						</span>
-						<ul class="category-list">
-
-
-							<li>
-								<a href="/viewproducts/1">Afryk Toiletry</a>
-							</li>
-							<li>
-								<a href="/viewproducts/2">Afryk Print Clothes</a>
-							</li>
-							<li>
-								<a href="/viewproducts/3">Afryk Footwear</a>
-							</li>
-							<li>
-								<a href="/viewproducts/4">Afryk Jewellery</a>
-							</li>
-							<li>
-								<a href="/viewproducts/5">Men</a>
-							</li>
-							<li>
-								<a href="/viewproducts/6">Women</a>
-							</li>
-							<li>
-								<a href="/viewproducts/7">West-African Collection </a>
-							</li>
-							<li>
-								<a href="/viewproducts/8">East-African Collection</a>
-							</li>
-							<li>
-								<a href="/viewproducts/9">African Souvenirs</a>
-							</li>
-
-						</ul>
-					</div>
-					<!-- /category nav -->
-
-					<!-- menu nav -->
-					<div class="menu-nav">
-						<span class="menu-header">Menu
-							<i class="fa fa-bars"></i>
-						</span>
-						<ul class="menu-list">
-							<li>
-								<a href="/">Home</a>
-							</li>
-							<li>
-								<a href="/products">Shop</a>
-							</li>
-							<li class="dropdown mega-dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Women
-									<i class="fa fa-caret-down"></i>
-								</a>
-								<div class="custom-menu">
-									<div class="row">
-										<div class="col-md-4">
-											<ul class="list-links">
-												<li>
-													<h3 class="list-links-title">Categories</h3>
-												</li>
-												<li>
-													<a href="#">Women’s Clothing</a>
-												</li>
-												<li>
-													<a href="#">Women’s Footwear</a>
-												</li>
-												<li>
-													<a href="#">Women’s Jewelleries</a>
-												</li>
-												<li>
-													<a href="#">Women’s Toiletries</a>
-												</li>
-											</ul>
-											<hr class="hidden-md hidden-lg">
-										</div>
-
-									</div>
-									<div class="row hidden-sm hidden-xs">
-										<div class="col-md-12">
-											<hr>
-											<a class="banner banner-1" href="#">
-												<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-												<div class="banner-caption text-center">
-													<h2 class="white-color">NEW COLLECTION</h2>
-													<h3 class="white-color font-weak">HOT DEAL</h3>
-												</div>
-											</a>
-										</div>
-									</div>
-								</div>
-							</li>
-							<li class="dropdown mega-dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Men
-									<i class="fa fa-caret-down"></i>
-								</a>
-								<div class="custom-menu">
-									<div class="row">
-										<div class="col-md-4">
-											<ul class="list-links">
-												<li>
-													<h3 class="list-links-title">Categories</h3>
-												</li>
-												<li>
-													<a href="#">Men’s Clothing</a>
-												</li>
-												<li>
-													<a href="#">Men’s Footwear</a>
-												</li>
-												<li>
-													<a href="#">Men’s Jewelleries</a>
-												</li>
-												<li>
-													<a href="#">Men’s Toiletries</a>
-												</li>
-											</ul>
-											<hr class="hidden-md hidden-lg">
-										</div>
-
-									</div>
-									<div class="row hidden-sm hidden-xs">
-										<div class="col-md-12">
-											<hr>
-											<a class="banner banner-1" href="#">
-												<img src="{{ url_for('static', filename= 'img/banner05.jpg') }}" alt="">
-												<div class="banner-caption text-center">
-													<h2 class="white-color">NEW COLLECTION</h2>
-													<h3 class="white-color font-weak">HOT DEAL</h3>
-												</div>
-											</a>
-										</div>
-									</div>
-								</div>
-							</li>
-							<li>
-								<a href="#">Sales</a>
-							</li>
-						</ul>
-					</div>
-					<!-- menu nav -->
->>>>>>> bacac56926fb2d5002a8357b7a293e9eaca9ec96
-				</div>
-			</div>
-			<!-- /container -->
 		</div>
+
+
+		</div>
+		<!-- responsive nav -->
+	</div>
+	<!-- container end -->
+</div>
 		<!-- /NAVIGATION -->
