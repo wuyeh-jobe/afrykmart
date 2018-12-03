@@ -75,59 +75,6 @@ def index():
     allProducts = getProducts("SELECT * FROM products INNER JOIN categories ON products.product_cat = categories.cat_id INNER JOIN brands ON products.product_cat = brands.brand_id")
     return render_template("index.html",fp = featuredProducts1, fp2 = featuredProducts2, lp = latestProducts,  ap = allProducts, pp = pickedProducts)
 
-@app.route('/ipn/',methods=['POST'])
-def ipn():
-    try:
-        arg = ''
-        request.parameter_storage_class = ImmutableOrderedMultiDict
-        values = request.form
-        for x, y in values.iteritems():
-            arg += "&{x}={y}".format(x=x,y=y)
-
-        validate_url = 'https://www.sandbox.paypal.com' \
-                       '/cgi-bin/webscr?cmd=_notify-validate{arg}' \
-                       .format(arg=arg)
-        r = requests.get(validate_url)
-        if r.text == 'VERIFIED':
-            try:
-                payer_email =  thwart(request.form.get('payer_email'))
-                unix = int(time.time())
-                payment_date = thwart(request.form.get('payment_date'))
-                username = thwart(request.form.get('custom'))
-                last_name = thwart(request.form.get('last_name'))
-                payment_gross = thwart(request.form.get('payment_gross'))
-                payment_fee = thwart(request.form.get('payment_fee'))
-                payment_net = float(payment_gross) - float(payment_fee)
-                payment_status = thwart(request.form.get('payment_status'))
-                txn_id = thwart(request.form.get('txn_id'))
-            except Exception as e:
-                with open('afrykmart/ipnout.txt','a') as f:
-                    data = 'ERROR WITH IPN DATA\n'+str(values)+'\n'
-                    f.write(data)
-            
-            with open('afrykmart/ipnout.txt','a') as f:
-                data = 'SUCCESS\n'+str(values)+'\n'
-                f.write(data)
-
-            #c,conn = connection()
-            c = mysql.connection.cursor()
-            c.execute("INSERT INTO ipn (unix, payment_date, username, last_name, payment_gross, payment_fee, payment_net, payment_status, txn_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                        (unix, payment_date, username, last_name, payment_gross, payment_fee, payment_net, payment_status, txn_id))
-            #conn.commit()
-            mysql.connection.commit()
-            c.close()
-            #conn.close()
-            gc.collect()
-
-        else:
-             with open('/afrykmart/ipnout.txt','a') as f:
-                data = 'FAILURE\n'+str(values)+'\n'
-                f.write(data)
-                
-        return r.text
-    except Exception as e:
-        return str(e)
-
 
 #This is for rendering the products.html template
 @app.route('/products')
@@ -225,6 +172,7 @@ def login():
                 #passed
                 session['logged_in'] = True
                 session['name'] = name
+                session['email'] = email
                 session['role'] = role
                 flash("Logged in as " + name + ".", 'success')
                 if role == "Admin":
@@ -586,6 +534,31 @@ def addToCart():
     return json.dumps({"results": result2})
 
 
+#This function is to add order
+def addOrder():
+    session['index'] = False
+    email=session['email']
+    cur = mysql.connection.cursor()
+    result = cur.execute('Select * from users where email = %s', [email])
+    all_data = cur.fetchall()
+    for res in all_data:
+        user_id = res['user_id']  
+        name=res['full_name'] 
+    details=displayOrder()[0]
+    amount=displayCart()[2]
+    status="Order in Progress"
+    now = datetime.datetime.now()
+    date_ordered=now.strftime("%Y-%m-%d %H:%M")    
+    cur.execute("INSERT INTO orders(user_id,cost, details, status, date_ordered) VALUES (%s,%s,%s,%s,%s)",[user_id,amount,details,status,date_ordered])
+    mysql.connection.commit()
+    cur.close()
+    # deleteCart()
+
+
+
+
+
+
 @app.route("/viewcart")
 def viewCart():
     session['index'] = False
@@ -597,6 +570,8 @@ def viewCart():
 def checkout():
     session['index'] = False
     session["amount"] = displayCart()[2]
+    addOrder()
+    deleteCart()
     return render_template("checkout.html")
 
 
@@ -620,6 +595,22 @@ def displayCart():
     for data in all_data:
         res.append((data["product_title"], data["product_image"],
                     data["product_price"], data["qty"]))
+        q = q + data["qty"]
+        p = p + data["product_price"] * data["qty"]
+    cur.close()
+    return res, q, p
+
+#Displays order details 
+def displayOrder():
+    cur = mysql.connection.cursor()
+    stmt = cur.execute(
+        "SELECT DISTINCT * FROM cart, products where products.product_id = p_id"
+    )
+    all_data = cur.fetchall()
+    q = 0
+    p = 0
+    for data in all_data:
+        res=data["product_title"]+ " qty:  "+str(data["qty"])
         q = q + data["qty"]
         p = p + data["product_price"] * data["qty"]
     cur.close()
@@ -698,6 +689,14 @@ def displayCategory(query):
 
         products.append(category_id + "#" + category_cat)
     return products
+
+
+# delete cart
+def deleteCart():
+    ip_add=ipAddress()
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM cart WHERE ip_add=%s",[ip_add])
+    cur.close()
 
 
 def displayBrand(query):

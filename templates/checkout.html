@@ -69,19 +69,12 @@
 										  
 										  <input type="hidden" name="amount" value="{{session['amount']}}">
 										  <input type="hidden" name="currency_code" value="USD">
-
-										  <input type="hidden" name="return" value="/">
-										  <input type="hidden" name="cancel_return" value="http://localhost:5000/index.html">
-										  <input type="hidden" name="notify_url" value="http://localhost:5000/ipn/">
 										  <input type="hidden" name="rm" value="2"> 
 										   
 										  <center>
 											  <!-- Display the payment button. -->
-											  <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal"
-											  
-											  alt="Buy Now" name="payb" />
-											  <!-- src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
-											  <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" /> -->
+											  <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="Check out with PayPal" alt="Buy Now" name="payb" />
+										
 										 </center>
 										</form>
 									{% else %}
