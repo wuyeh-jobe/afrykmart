@@ -171,8 +171,12 @@ def products():
 
 
 #This is for rendering the admin_products.html template
+<<<<<<< HEAD
 @app.route('/product_mgt', methods=["POST", "GET"])
 @is_logged_in2
+=======
+@app.route('/product_mgt', methods=["POST","GET"])
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
 def admin_products():
     session['index'] = False
     allProducts = displayProducts(
@@ -194,6 +198,8 @@ def admin_products():
         #f = os.path.join(app.config['UPLOAD_FOLDER'], image)
         file.save(destination)
         try:
+<<<<<<< HEAD
+=======
 
             # prepare update query and data
             query = 'INSERT INTO products (product_cat, product_brand,product_title, product_price,product_desc,product_image,product_keywords) VALUES (%s,%s,%s,%s,%s,%s,%s)'
@@ -210,6 +216,41 @@ def admin_products():
             msg = "added successfully"
             print(msg)
             #close connect
+
+            return redirect(url_for('admin_products'))
+        except:
+            msg = "error occured"
+            print(msg)
+    return render_template(
+        "product_mgt.html", ap=allProducts, ca=categories, brand=brands)
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
+
+            # prepare update query and data
+            query = 'INSERT INTO products (product_cat, product_brand,product_title, product_price,product_desc,product_image,product_keywords) VALUES (%s,%s,%s,%s,%s,%s,%s)'
+            #use cursor
+            cur = mysql.connection.cursor()
+            #execute query
+            cur.execute(query,
+                        (product_cat, product_brand, product_title,
+                         product_price, product_desc, image, product_keywords))
+            #commit DB
+
+<<<<<<< HEAD
+            mysql.connection.commit()
+            cur.close()
+            msg = "added successfully"
+            print(msg)
+            #close connect
+=======
+# #This is for rendering the categories in a dropdown
+# @app.route('/category')
+# def category_products():
+#     session['index'] = False
+#     allCategories = displayCategory(
+#         "SELECT * FROM categories INNER JOIN categories ON products.product_id = categories.cat_id"
+#     )
+#     return render_template("product_mgt.html", items=allCategories)
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
 
             return redirect(url_for('admin_products'))
         except:
@@ -612,7 +653,12 @@ def addToCart():
 
         deleteQuery("DELETE FROM cart WHERE qty = 0")
     if action == "-500":
+<<<<<<< HEAD
         deleteQuery("DELETE FROM cart WHERE p_id =" + product_id)
+=======
+        deleteQuery("DELETE FROM cart WHERE p_id ="+product_id)
+
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
 
     cur = mysql.connection.cursor()
     cur.execute(
@@ -709,9 +755,15 @@ def displayProducts(query):
 
 
 def loadCategories():
+<<<<<<< HEAD
     cat_name = []
     cat_id = []
     sql = "SELECT * FROM categories"
+=======
+    cat_name=[]
+    cat_id=[]
+    sql ="SELECT * FROM categories"
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
     cur = mysql.connection.cursor()
     result = cur.execute(sql)
     all_data = cur.fetchall()
@@ -720,7 +772,11 @@ def loadCategories():
         category_cat = data['cat_name']
         cat_id.append(category_id)
         cat_name.append(category_cat)
+<<<<<<< HEAD
     return cat_id, cat_name
+=======
+    return cat_id,cat_name
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
 
 
 def displayCategory(query):
@@ -756,10 +812,18 @@ def displayBrand(query):
 def delete_prod(id):
     # Create cursor
     cur = mysql.connection.cursor()
+<<<<<<< HEAD
     result = cur.execute("SELECT * FROM products where product_id = %s", [id])
     try:
         target = os.path.join(app_root, 'static/img/')
         data = cur.fetchone()  #get image name from database
+=======
+    result = cur.execute("SELECT * FROM products where product_id = %s",
+        [id])
+    try:
+        target = os.path.join(app_root, 'static/img/')
+        data = cur.fetchone() #get image name from database
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
         fileToRemove = '/'.join([target, data["product_image"]])
         os.remove(fileToRemove)
 
@@ -800,6 +864,7 @@ def edit_product(id):
             target = os.path.join(app_root, 'static/img/')
             destination = '/'.join([target, image])
             file.save(destination)
+<<<<<<< HEAD
             data = cur.fetchone()  #get image name from database
             fileToRemove = '/'.join([target, data["product_image"]])
             os.remove(fileToRemove)
@@ -815,6 +880,23 @@ def edit_product(id):
                  product_desc, product_keywords, id))
             print("Image not updated")
 
+=======
+            data = cur.fetchone() #get image name from database
+            fileToRemove = '/'.join([target, data["product_image"]])
+            os.remove(fileToRemove)
+            cur.execute(
+            "UPDATE products SET product_cat=%s, product_brand=%s,product_title=%s, product_price=%s,product_desc=%s,product_image=%s,product_keywords=%s WHERE product_id=%s",
+            (product_cat, product_brand, product_title, product_price,
+             product_desc, image, product_keywords, id))
+            
+        except:
+            cur.execute(
+            "UPDATE products SET product_cat=%s, product_brand=%s,product_title=%s, product_price=%s,product_desc=%s,product_keywords=%s WHERE product_id=%s",
+            (product_cat, product_brand, product_title, product_price,
+             product_desc, product_keywords, id))
+            print("Image not updated")
+       
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
         # Commit to DB
         mysql.connection.commit()
 
@@ -831,6 +913,12 @@ def edit_product(id):
 @is_logged_in2
 def index_admin():
     return render_template('index_admin.html')
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> b05f7d03215802ccfc7769da3626ab9a49c9979b
 
 
 if __name__ == '__main__':
