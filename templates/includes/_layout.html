@@ -55,7 +55,7 @@
 						<li>
 							<a href="/">Store</a>
 						</li>
-						<li class="dropdown default-dropdown">
+						<!--<li class="dropdown default-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG
 								<i class="fa fa-caret-down"></i>
 							</a>
@@ -86,7 +86,7 @@
 									<a href="#">EUR (€)</a>
 								</li>
 							</ul>
-						</li>
+						</li> -->
 						{% if session.logged_in != NULL %}
 						<li>
 							<strong class="text-uppercase">
@@ -123,12 +123,12 @@
 							
 							<input class="input search-input" onkeyup="liveSearch(this.value)" type="text" placeholder="Enter your keyword">
 							
-							<select class="input search-categories">
+							<!--<select class="input search-categories">
 								<option value="0">All Categories</option>
 								<option value="">sth</option>
 								<option value="1">Category 01</option>
 								<option value="1">Category 02</option>
-							</select>
+							</select>-->
 							<button class="search-btn">
 								<i class="fa fa-search"></i>
 							</button>
@@ -153,7 +153,7 @@
 								</strong>
 							</div>
 							{% if session.logged_in == NULL %}
-							<a href="/login" class="text-uppercase">Login</a> /
+							<a href="/login" class="text-uppercase">Login</a>/
 							<a href="/signup" class="text-uppercase">Sign Up</a>
 							{% else %}
 							<a>{{session.name}}</a>

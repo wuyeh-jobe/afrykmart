@@ -563,7 +563,7 @@ def addToCart():
                     qty = qty + 1
                     query = "UPDATE cart SET qty = %s where p_id= %s"
                     insertQuery(query, (qty, data["p_id"]))
-                else:
+                elif action == "-100":
                     qty = qty - 1
                     query = "UPDATE cart SET qty = %s where p_id= %s"
                     insertQuery(query, (qty, data["p_id"]))
@@ -572,6 +572,9 @@ def addToCart():
             insertQuery(query, (product_id, ip_add, 1))
 
         deleteQuery("DELETE FROM cart WHERE qty = 0")
+    if action == "-500":
+        deleteQuery("DELETE FROM cart WHERE p_id ="+product_id)
+
 
     cur = mysql.connection.cursor()
     cur.execute(

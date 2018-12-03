@@ -139,21 +139,47 @@
 
             }
             function addToCart(idd,a,p){
-                if (p != 0){
+                if (p == 1){
                     if(a == -50){
                         swal("Product Added", "Product has been added to cart!", "success",{timer: 5000});
                     }else if(a == -100){
                         swal("Product Added", "Product has been removed from cart!", "info",{timer: 5000});
                     }
+                    ajaxR(idd,a);
                 }
-                else{
+                else if (p==0){
                     if(a == -50){
                         swal({title: "Quantity Increased", text: "", icon: "success", button: "Sweet!",timer: 5000});
                     }else if(a == -100){
                         swal({title: "Quantity Reduced", text: "You can increase quantity or add product again!", icon: "info", button: "Awesome!",timer: 5000});
                     }
+                    ajaxR(idd,a);
                 }
-                value = idd.trim(); // remove any spaces around the text
+                else if(p == -5){
+                	swal({
+						  title: "Are you sure?",
+						  text: "This product will be deleted from the cart!",
+						  icon: "warning",
+						  buttons: true,
+						  dangerMode: true,
+						})
+						.then((willDelete) => {
+						  if (willDelete) {
+						    swal("The Product has been deleted", {
+						      icon: "success",
+						    });
+						    ajaxR(idd,a);
+						  } else {
+						    swal("Sweet! The product is kept");
+						    	a = -400;
+						    	ajaxR(idd,a);
+						    }
+						});
+                }
+                                
+            }
+            function ajaxR(idd,a){
+            	value = idd.trim(); // remove any spaces around the text
 				if(value != ""){ // don't make requests with an empty string
 					$.ajax({
 						url: "/addToCart",
@@ -168,16 +194,16 @@
                             var tc = 0;
 							for(i in data.results){
                                 var image = data.results[i].product_image;
-                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="../static/img/'+image+'")" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="/viewproduct/'+data.results[i].product_id+'">' + data.results[i].product_title+ '</a></h2></div><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-100,0)" class="cancel-btn"><i class="fa fa-minus"></i></i></button></div>';
-                                tp = tp + data.results[i].qty;
+                               res = res + '<div class="product product-widget"> <div class="product-thumb"> <img src="../static/img/'+image+'")" alt=""></div><div class="product-body"><h3 class="product-price"> $'+ data.results[i].product_price +'<span class="qty"> x ' + data.results[i].qty+ ' </span></h3><h2 class="product-name"><a href="/viewproduct/'+data.results[i].product_id+'">' + data.results[i].product_title+ '</a></h2></div><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-500,-5)" class="cancel-btn"><i class="fa fa-trash"></i></i></button></div>';
+                                tp = tp + 1;
                                 tc = tc + (data.results[i].product_price * data.results[i].qty);
                                 
-                                res2 = res2 + '<tr><td class="thumb"><img src="static/img/'+image+'" alt=""></td><td class="details"><a href="/viewproduct/'+data.results[i].product_id+'">'+data.results[i].product_title+'</a><ul> <li><span>Size: XL</span></li><li><span>Color: Camelot</span></li></ul></td>	<td class="price text-center"><strong>  $'+data.results[i].product_price+'</strong><br></td><td class="qty text-center total"><strong> '+data.results[i].qty+'</strong></td>	<td class="total text-center"><strong class="primary-color"> $'+ data.results[i].product_price * data.results[i].qty+ '</strong></td>	<td class="text-right"><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-50,0)" class="main-btn icon-btn"><i class="fa fa-plus"></i></button><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-100,0)" class="main-btn icon-btn">' ;
+                                res2 = res2 + '<tr><td class="thumb"><img src="static/img/'+image+'" alt=""></td><td class="details"><a href="/viewproduct/'+data.results[i].product_id+'">'+data.results[i].product_title+'</a><ul> <li><span>Size: XL</span></li><li><span>Color: Camelot</span></li></ul></td>	<td class="price text-center"><strong>  $'+data.results[i].product_price+'</strong><br></td><td class="qty text-center total"><strong> '+data.results[i].qty+'</strong></td>	<td class="total text-center"><strong class="primary-color"> $'+ data.results[i].product_price * data.results[i].qty+ '</strong></td>	<td class="text-right"><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-50,0)" class="main-btn icon-btn"><i class="fa fa-plus"></i></button> <button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-100,0)" class="main-btn icon-btn">' ;
                                 
                                 if(data.results[i].qty =='1'){
-                                   res2 = res2 + '<i class="fa fa-times"></i></button></td></tr>';
+                                   res2 = res2 + '<i class="fa fa-trash"></i></button></td></tr>';
                                 }else{
-                                    res2 = res2 + '<i class="fa fa-minus"></i></button></td></tr>';
+                                    res2 = res2 + '<i class="fa fa-minus"></i></button></button><button id="'+data.results[i].product_id+'" onclick="addToCart(this.id,-500,-5)" class="main-btn icon-btn"><i class="fa fa-trash"></i></button></td></button></tr>';
                                 }
 							}
                             res2 = res2+ '<tfoot><tr><th class="empty" colspan="3"></th><th>SUBTOTAL</th><th colspan="2" class="sub-total"> $'+tc+'</th></tr><tr><th class="empty" colspan="3"></th>	<th>SHIPING</th><td colspan="2">Free Shipping</td></tr> <tr><th class="empty" colspan="3"></th><th>TOTAL</th><th colspan="2" class="total">$'+tc+'</th></tr>	</tfoot>';
@@ -196,7 +222,7 @@
 				else{
 					$("#shopping-cart-list").html(""); // set the results empty in case of empty string
 				}
-                
+
             }
 
             
