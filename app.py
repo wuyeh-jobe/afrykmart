@@ -9,15 +9,32 @@ import datetime
 import json
 from werkzeug.utils import secure_filename
 import os
+from flask_mail import Mail, Message
+
 
 app = Flask(__name__)
+
 app.secret_key = "114455"
+
 #config db
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'afrykmart'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+app.config.update(dict(
+    DEBUG = True,
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = 587,
+    MAIL_USE_TLS = True,
+    MAIL_USE_SSL = False,
+    MAIL_USERNAME = 'rahmatajike.raji@gmail.com',
+    MAIL_PASSWORD = 'firstchild1',
+))
+
+mail = Mail(app)
+
 
 # UPLOAD_FOLDER = os.path.basename('static/img')
 # ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'png', 'gif'])
@@ -26,6 +43,7 @@ app_root = os.path.dirname(os.path.abspath(__file__))
 
 #init MYSQL
 mysql = MySQL(app)
+
 
 from werkzeug.datastructures import ImmutableOrderedMultiDict
 import requests
@@ -796,6 +814,19 @@ def edit_product(id):
 def index_admin():
     return render_template('index_admin.html')
 
+
+
+@app.route("/email", methods=["POST","GET"])
+def email():
+    if request.method == "POST":
+        email = request.form['email']
+        print (email)
+        msg = Message("Welcome to Afryk Mart Newsletter!",
+                  sender="rahmat.raji@ashesi.edu.gh",
+                  recipients=[email])
+        msg.body= "You have successfully been added to Afyrk Mart's Mailing List. We will keep you updated on the latest products, promotions and discounts"
+        mail.send(msg)
+    return redirect(url_for("index"))
 
 
 
