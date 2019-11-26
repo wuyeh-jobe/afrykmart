@@ -23,15 +23,8 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'afrykmart'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-app.config.update(dict(
-    DEBUG = True,
-    MAIL_SERVER = 'smtp.gmail.com',
-    MAIL_PORT = 587,
-    MAIL_USE_TLS = True,
-    MAIL_USE_SSL = False,
-    MAIL_USERNAME = 'rahmatajike.raji@gmail.com',
-    MAIL_PASSWORD = 'firstchild1',
-))
+
+#Email Configuration should be here
 
 mail = Mail(app)
 
