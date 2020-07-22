@@ -17,10 +17,10 @@ app = Flask(__name__)
 app.secret_key = "114455"
 
 #config db
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'afrykmart'
+app.config['MYSQL_HOST'] = '185.201.11.149'
+app.config['MYSQL_USER'] = 'u440803058_smart_clean'
+app.config['MYSQL_PASSWORD'] = '6916684@Muhammad'
+app.config['MYSQL_DB'] = 'u440803058_smart_clean'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 
